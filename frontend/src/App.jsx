@@ -14,6 +14,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 // Importar los componentes de usuario
 import Login from './components/Login';
 import Register from './components/Register';
+import Profile from './components/Profile';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './components/AdminDashboard';
 
@@ -59,14 +60,9 @@ function AppContent() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        {/* <Route path="/" element={
-          <MainStyled>
-            <BeebusyList />
-            <AddNewElement type="list" />
-          </MainStyled>
-        } /> */}
         <Route path="/projects" element={<ProjectList />} /> {/* Nueva ruta para la lista de proyectos */}
         <Route path="/projects/:projectId" element={<BeebusyProject />} /> {/* Modificar esta ruta para los proyectos individuales */}
         <Route path="/" element={<ProjectList />} /> {/* Modificado para mostrar la lista de proyectos por defecto */}

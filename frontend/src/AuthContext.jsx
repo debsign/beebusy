@@ -7,12 +7,18 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    // Lo inicializamos dependiendo de lo que haya en el localstorage
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
     const contextValue = {
         isAuthenticated,
         login: () => setIsAuthenticated(true),
-        logout: () => setIsAuthenticated(false)
+        logout: () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            localStorage.removeItem('userID');
+            setIsAuthenticated(false);
+        }
     };
 
     return (

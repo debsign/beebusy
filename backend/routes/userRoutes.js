@@ -11,7 +11,10 @@ routes.post('/login', userController.login);
 // Rutas protegidas
 routes.get('/users', authenticateJWT, isAdmin, userController.getAllUsers);
 routes.post('/users', authenticateJWT, isAdmin, userController.addUser);
+routes.get('/user/:id', authenticateJWT, isAdmin, userController.getUser);
 routes.put('/user/:id', authenticateJWT, isAdmin, userController.updateUser);
 routes.delete('/user/:id', authenticateJWT, isAdmin, userController.deleteUser);
+
+routes.post('/user/:id/alert', authenticateJWT, userController.addAlert);
 
 module.exports = routes;

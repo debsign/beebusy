@@ -43,6 +43,27 @@ exports.addProject = async (req, res) => {
       res.status(400).json({ message: 'Error al crear un proyecto', error });
     }
 };
+// Añade listas al proyecto
+exports.addListToProject = async (req, res) => {
+    console.log('entra');
+    try {
+        const { projectId, listId } = req.body;  // Aquí, asegúrate de que projectId y listId se están recibiendo correctamente
+        console.log('Project ID:', projectId, 'List ID:', listId);
+        const project = await Project.findById(projectId);
+        console.log('Project:', project);  // Verifica si el proyecto se recupera correctamente
+        if (!project) {
+            return res.status(404).json({ message: 'Proyecto no encontrado' });
+        }
+        project.lists.push(listId);
+        await project.save();
+        res.status(200).json({ message: 'Lista añadida al proyecto', project });
+    } catch (error) {
+        console.error('Error:', error);  // Imprime el error para entender qué está mal
+        res.status(400).json({ message: 'Error al añadir la lista al proyecto', error });
+    }
+};
+
+
 // UPDATE proyecto
 exports.updateProject = async (req, res) => {
     try {

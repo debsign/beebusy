@@ -33,6 +33,7 @@ exports.login = async (req, res) => {
     res.status(200).json({ 
         message: 'Logueado',
         role: user[0].role,
+        userID: user[0]._id.toString(),
         token });
   } catch (error) {
     // Algo ha fallado
@@ -48,6 +49,20 @@ exports.getAllUsers = async (req, res) => {
       res.status(400).json({ message: 'Error al obtener usuarios', error });
     }
 };
+// GET a single user by ID
+exports.getUser = async (req, res) => {
+  try {
+      const userId = req.params.id;  // Obtén el ID del usuario de los parámetros de la ruta
+      const user = await User.findById(userId);  // Busca un usuario por ID
+      if (!user) {
+          return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+      res.status(200).json(user);  // Devuelve el usuario encontrado
+  } catch (error) {
+      res.status(400).json({ message: 'Error al obtener el usuario', error });
+  }
+};
+
 // POST user
 exports.addUser = async (req, res) => {
     try {
@@ -71,7 +86,7 @@ exports.updateUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
-        
+        console.log(res);
         res.status(200).json({ message: 'Usuario actualizado', user });
     } catch (error) {
         res.status(400).json({ message: 'Error al actualizar usuario', error });
@@ -93,4 +108,23 @@ exports.deleteUser = async (req, res) => {
     }
 };
   
+// ADD alert
+exports.addAlert = async (req, res) => {
+  try {
+      const userId = req.params.id;
+      const alertMessage = req.body.message;  // Asegúrate de validar y sanear este input
+
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+
+      user.alerts.push({ message: alertMessage });
+      await user.save();
+
+      res.status(200).json({ message: 'Alerta añadida', alert: alertMessage });
+  } catch (error) {
+      res.status(400).json({ message: 'Error al añadir alerta', error });
+  }
+};
   

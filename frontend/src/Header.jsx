@@ -12,27 +12,36 @@ import { Link } from 'react-router-dom';
 import Settings from '@mui/icons-material/Settings';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Logout from '@mui/icons-material/Logout';
+import Avatar from '@mui/material/Avatar';
+import avatarWoman from './assets/images/avatar-woman.svg';
+import avatarMan from './assets/images/avatar-man.svg';
+
+// Redux
+import { useSelector } from 'react-redux';
+import { selectHasNewNotifications } from '../features/notificationSlice';
 
 import logo from './assets/images/bee.png';
 
 import { useAuth } from './AuthContext';
 
 function Header({ toggleDark, handleModeChange }) {
+    // 1. Definición de variables
     const { isAuthenticated, logout } = useAuth();
-
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
     const [userRole, setUserRole] = useState(null);
-
+    const [user, setUser] = useState(null);
+    
+    // Para controlar las notificaciones
+    const hasNewNotifications = useSelector(selectHasNewNotifications);
+    // 2. Funciones
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
     };
-
     const closeMenu = () => {
         setMenuOpen(false);
     };
-
     // submenu
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -41,8 +50,6 @@ function Header({ toggleDark, handleModeChange }) {
     const handleClose = () => {
       setAnchorEl(null);
     };
-
-    // Logout
     useEffect(() => {
         const storedRole = localStorage.getItem('role');
         const storedToken = localStorage.getItem('token');
@@ -51,9 +58,46 @@ function Header({ toggleDark, handleModeChange }) {
           setUserRole(storedRole);
         }
     }, []);
+    // Para obtener la imagen del avatar
+    useEffect(() => {
+        const fetchUser = async () => {
+            const BASE_URL = import.meta.env.VITE_BASE_URL;
+            const userID = localStorage.getItem('userID');
+            const token = localStorage.getItem('token');
+    
+            if (!userID || !token) return;
+    
+            try {
+                const response = await fetch(`${BASE_URL}/api/user/${userID}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+    
+                if (response.ok) {
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.indexOf('application/json') !== -1) {
+                        const data = await response.json();
+                        setUser(data);
+                    } else {
+                        console.error('La respuesta no es JSON');
+                    }
+                } else {
+                    console.error('Error al obtener la información del usuario');
+                }
+            } catch (error) {
+                console.error('Error en fetch:', error);
+            }
+        };
+    
+        fetchUser();
+    }, []);
+    // Para verificar que funciona
+    useEffect(() => {
+        console.log("Has new notifications:", hasNewNotifications);
+    }, [hasNewNotifications]);
 
-    console.log(isAuthenticated);
-      
+    // 3. Resultado
     return (
         <>
             {isMenuOpen && <Overlay onClick={closeMenu} />}
@@ -79,7 +123,10 @@ function Header({ toggleDark, handleModeChange }) {
                 {isAuthenticated && 
                     <div>
                         <IconButton>
-                            <NotificationsNoneIcon/>
+                            <NotificationsNoneIcon style={{ position: 'relative' }}/>
+                            {hasNewNotifications && 
+                                <RedSpot />
+                            }
                         </IconButton>
                         <IconButton         
                             id="basic-button"
@@ -87,7 +134,16 @@ function Header({ toggleDark, handleModeChange }) {
                             aria-haspopup="true"
                             aria-expanded={open ? 'true' : undefined}
                             onClick={handleClick}>
-                            <AccountCircleIcon/>
+                            {user && user.avatar ? 
+                                (user.avatar.includes('avatar-woman') ? 
+                                    <Avatar src={avatarWoman} alt="Avatar de la usuaria"/> :
+                                user.avatar.includes('avatar-man') ? 
+                                    <Avatar src={avatarMan} alt="Avatar del usuario"/> :
+                                    <AccountCircleIcon/>
+                                )
+                            : 
+                                <AccountCircleIcon/>
+                            }
                         </IconButton>
                         <Menu
                             id="basic-menu"
@@ -98,7 +154,10 @@ function Header({ toggleDark, handleModeChange }) {
                             'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem component={Link} href='#' onClick={handleClose}>
+                            <MenuItem onClick={() => {
+                                handleClose();
+                                navigate('/profile');
+                            }}>
                                 <ListItemIcon>
                                     <AccountCircleIcon fontSize="small" />
                                 </ListItemIcon> Mi perfil
@@ -191,6 +250,14 @@ const Logo = styled.img`
   width: 30px;
   height: 30px;
 `;
-
+const RedSpot = styled.span`
+    position: 'absolute';
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background-color: 'red';
+    border-radius: '50%';
+`;
 
 export default Header

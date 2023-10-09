@@ -4,12 +4,12 @@ import styled from "styled-components"
 import AddNewElementTitle from "./AddNewElementTitle"
 
 
-const AddNewElement = ({type}) => {
+const AddNewElement = ({ type, onAdd, projectId }) => {
     const [open, setOpen] = useState(false)
     return (
         <StyledNewElementWrapper>
             <Collapse in={open}>
-                <AddNewElementTitle type={type} setOpen={setOpen}/>
+                <AddNewElementTitle type={type} setOpen={setOpen} onAdd={onAdd} projectId={projectId}/>
             </Collapse>
             <Collapse in={!open}>
                 <StyledPaper onClick={()=>setOpen(true)}>

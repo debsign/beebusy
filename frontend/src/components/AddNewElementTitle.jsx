@@ -4,34 +4,91 @@ import styled from "styled-components"
 import ClearIcon from "@mui/icons-material/Clear"
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 
-const AddNewElementTitle = ({type, setOpen}) => {
-    const [title, setTitle] = useState("")
+const AddNewElementTitle = ({type, setOpen, onAdd, projectId}) => {
+    const [name, setName] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    // Url para fetch
+    const BASE_URL = import.meta.env.VITE_BASE_URL;
+    // Token para identificación
+    const token = localStorage.getItem('token');
+
+    const body = type === 'card' 
+    ? { name } 
+    : { name, projectId };
+
+    const handleAdd = async () => {
+      console.log('Inicio de handleAdd, type:', type, 'name:', name); // Log para diagnóstico
+      if (!name) return;
+      setLoading(true);
+      setError(null);
+    
+      const url = type === 'card' 
+          ? `${BASE_URL}/api/tasks/` 
+          : `${BASE_URL}/api/lists/`;
+      
+      console.log('URL:', url, 'Body:', JSON.stringify(body)); // Log para diagnóstico
+    
+      try {
+          const response = await fetch(url, {
+              method: 'POST',
+              headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(body)
+          });
+    
+          if (response.ok) {
+              const data = await response.json();
+              onAdd(data);
+              console.log('Data:', data); // Log para diagnóstico
+              setName("");
+              setOpen(false);
+              window.location.reload();
+          } else {
+              throw new Error('Failed to add new element');
+          }
+      } catch (error) {
+          setError(error.message);
+      } finally {
+          setLoading(false);
+          setOpen(false);
+      }
+    };
+
     return (
-        <StyledNewElementTitleWrapper>
-            <Paper style={{width: '100%'}}>
-                <StyledInputBase 
-                    multiline
-                    value={title} 
-                    onBlur={() => setOpen(false)}
-                    onChange={e=>setTitle(e.target.value)}
-                    placeholder = {
-                        type === "card" ? "Introduce un título para la tarea" : "Introduce un título para la lista"
-                    }
-                ></StyledInputBase>
-            </Paper>
-            <AddNewElementTitleWrapper>
-                <div>
-                    <StyledButton>{type === "card" ? "Añadir tarea" : "Añadir lista"}</StyledButton>
-                    <IconButton onClick={()=>setOpen(false)}>
-                        <ClearIcon/>
-                    </IconButton>
-                </div>
-                <IconButton>
-                    <MoreHorizIcon/>
-                </IconButton>
-            </AddNewElementTitleWrapper>
-        </StyledNewElementTitleWrapper>
-    )
+      <StyledNewElementTitleWrapper>
+      <Paper style={{width: '100%'}}>
+          <StyledInputBase 
+              multiline
+              value={name} 
+              onChange={e => setName(e.target.value)}
+              placeholder = {
+                  type === "card" 
+                  ? "Introduce un título para la tarea" 
+                  : "Introduce un título para la lista"
+              }
+              disabled={loading}
+          ></StyledInputBase>
+      </Paper>
+      <AddNewElementTitleWrapper>
+          <div>
+              <StyledButton onClick={handleAdd} disabled={loading}>
+                  {type === "card" ? "Añadir tarea" : "Añadir lista"}
+              </StyledButton>
+              <IconButton onClick={() => !loading && setOpen(false)}>
+                  <ClearIcon/>
+              </IconButton>
+          </div>
+          <IconButton>
+              <MoreHorizIcon/>
+          </IconButton>
+      </AddNewElementTitleWrapper>
+      {error && <Error>{error}</Error>}
+  </StyledNewElementTitleWrapper>
+);
 }
 
 const StyledNewElementTitleWrapper = styled.div`
@@ -63,5 +120,8 @@ const AddNewElementTitleWrapper = styled.div`
   margin-top: 1rem;
   width: 100%;
 `;
-
+const Error = styled.p`
+    color: red;
+    font-size: 0.8rem;
+`;
 export default AddNewElementTitle

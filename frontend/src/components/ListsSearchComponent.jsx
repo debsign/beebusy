@@ -59,7 +59,7 @@ const ListsSearchComponent = () => {
     fetchLists();
   }, []);
   if (isLoading) {
-    return <div>Cargando...</div>;
+    return <div className='loader'></div>;
   }
   // Buscar lista
   const listsFiltrados = Array.isArray(lists) ? lists.filter(list => 

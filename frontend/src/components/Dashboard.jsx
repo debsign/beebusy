@@ -1,22 +1,92 @@
 // Dashboard.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Stack from '@mui/material/Stack';
+
+import { useDispatch } from 'react-redux';
+import { setHasNewNotifications } from '../../features/notificationSlice';
 
 function Dashboard() {
-
+  // 1. Definición de variables
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const role = localStorage.getItem('role');
-  console.log(role);
-  
+  const [alerts, setAlerts] = useState([]);
+  const userID = localStorage.getItem('userID');
+
+  const dispatch = useDispatch();
+  // 2. Funciones
+  useEffect(() => {
+      const fetchAlerts = async () => {
+        const token = localStorage.getItem('token');
+        if (!token){
+            console.error('Token no encontrado');
+            return;
+        }
+        try {
+          const response = await fetch(`${BASE_URL}/api/user/${userID}`, {
+              method: 'GET',
+              headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+              }
+          });
+
+          if (response.ok) {
+              console.log('Response:', response);
+              const data = await response.json();
+              console.log('Data:', data);
+
+              // Como queremos las alertas ordenadas de más recientes a menos, utilizamos la función "sort"
+              const sortedAlerts = data.alerts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+              setAlerts(sortedAlerts);
+          } else {
+              console.error('Error al obtener las alertas:', await response.text());
+          }
+
+        } catch (error) {
+            console.error('Error al realizar fetch de alertas:', error);
+        }
+      };
+
+      fetchAlerts();
+  }, [userID]);
+  useEffect(() => {
+    // Esto se ejecutará cuando el componente se monte
+    // y actualizará el estado Redux a false.
+    dispatch(setHasNewNotifications(false));
+  }, [dispatch]); // `dispatch` se incluye en las dependencias del efecto
+  // 3. Resultado
   return (
-    <ContentWrapper>
-      {role ? <h1>Bienvenido al Dashboard</h1> : <p>No tienes permisos para acceder a esta página</p> }
-    </ContentWrapper>
+    <>
+    {role ? 
+      <ContentWrapper>
+        <h1>Bienvenido a tu dashboard</h1>
+        <p>Aquí podrás ver tus alertas:</p>
+        <Stack sx={{ width: '100%' }} spacing={2}>
+        {alerts && alerts.map(alert => (
+            <div key={alert._id}>
+              <Alert severity="info">
+                <AlertTitle>Info</AlertTitle>
+                {alert.message}
+                <p>{new Date(alert.createdAt).toLocaleString()}</p>
+              </Alert>
+            </div>
+        ))}
+        </Stack>
+      </ContentWrapper>
+      : <ContentWrapper>
+          <p>Inicia sesión o regístrate para acceder a esta página.</p>
+        </ContentWrapper> }
+    </>
+    
   );
 }
 
 const ContentWrapper = styled.section`
   && {
-    width: 100%;
+    width: -webkit-fill-available;
     padding-inline: 1rem;
     padding-block: 2rem;
     margin-right: auto;

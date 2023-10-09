@@ -68,7 +68,6 @@ const TasksSearchComponent = () => {
     };
     fetchProjects();
   }, []);
-
   // Usuarios del proyecto
   const [users, setUsers] = useState([]);
   useEffect(() => {
@@ -102,7 +101,6 @@ const TasksSearchComponent = () => {
 
     fetchUsers();
   }, []);
-
   // Listas del proyecto
   const [lists, setLists] = useState([]);
   useEffect(() => {
@@ -136,7 +134,6 @@ const TasksSearchComponent = () => {
 
     fetchLists();
   }, []);
-
   // Información de las tareas
   useEffect(() => {
     const fetchTasks = async () => {
@@ -170,7 +167,7 @@ const TasksSearchComponent = () => {
     fetchTasks();
   }, []);
   if (isLoading) {
-    return <div>Cargando...</div>;
+    return <div className='loader'></div>;
   }
   // Buscar tarea
   const tasksFiltradas = Array.isArray(tasks) ? tasks.filter(task => 
@@ -221,7 +218,6 @@ const TasksSearchComponent = () => {
       console.error('Error:', error);
     });
   };
-
   // Borrar task
   const deleteTask = id => {
     const token = localStorage.getItem('token');
@@ -314,6 +310,7 @@ const TasksSearchComponent = () => {
     setOpenDialog(false);
     setCurrentTaskId(null);
   };
+  // Cambiar la tarea
   const handleChange = (event) => {
     const { name, value } = event.target;
     setnewTask((prevTask) => {
@@ -332,13 +329,42 @@ const TasksSearchComponent = () => {
       setProjectLists([]);
     }
   }
-};
+  };
+  // Notificar al usuario cuando se añade tarea
+  const notifyUser = async (userId, message) => {
+    const token = localStorage.getItem('token');
+    if (!token){
+        console.error('Token no encontrado');
+        return;
+    }
+    try {
+        const response = await fetch(`${BASE_URL}/api/user/${userId}/alert`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message }) // Aquí se envía el mensaje de la alerta
+        });
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        console.log('Alerta enviada:', await response.json());
+    } catch (error) {
+        console.error('Error al enviar la alerta:', error);
+    }
+  };
+  // Guardar los cambios en la tarea
   const saveTask = task => {
     const taskWithUserIds = {
       ...task,
       users: task.users.map(userName => {
         const user = users.find(user => `${user.firstName} ${user.lastName}` === userName);
+        if (user) {
+            notifyUser(user._id, 'Te han asignado una nueva tarea');
+        }
         return user ? user._id : null;
       }).filter(userId => userId !== null),
       projects: projects.find(project => project.title === task.projects)?._id || null,
@@ -356,8 +382,6 @@ const TasksSearchComponent = () => {
         addTask(taskWithUserIds);
     }
   };
-  // console.log('tasksFiltradas', tasksFiltradas);
-
   return (
     <>
         <div style={{paddingBlock: '1rem', display: 'flex'}} className='contentSearch'>

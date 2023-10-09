@@ -135,7 +135,7 @@ const ProjectsSearchComponent = () => {
     fetchProjects();
   }, []);
   if (isLoading) {
-    return <div>Cargando...</div>;
+    return <div className='loader'></div>;
   }
   // Buscar proyecto
   const projectsFiltrados = Array.isArray(projects) ? projects.filter(project => 

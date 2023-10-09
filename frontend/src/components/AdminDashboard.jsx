@@ -1,4 +1,3 @@
-// AdminDashboard.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Stack from '@mui/material/Stack';
@@ -16,38 +15,45 @@ function AdminDashboard() {
   const role = localStorage.getItem('role');
 
   return (
-    <ContentWrapper>
-      {role === 'admin' ? <h3>Bienvenido al Dashboard de Administrador</h3> : <p>No tienes permisos para acceder a esta página</p> }
-      <Stack>
-        <TabContext value={value}>
+    <>
+      {role === 'admin' ?
+        <ContentWrapper>
+          <h1>Dashboard de Administrador</h1>
+          <p>En este administrador podrás gestionar de forma sencilla la información de los usuarios, los proyectos, las listas y las tareas.</p>
           <Stack>
-            <Tabs
-              value={value}
-              onChange={(event, newValue) => setValue(newValue)}
-              variant="scrollable"
-              scrollButtons
-              allowScrollButtonsMobile
-              aria-label="scrollable force tabs example"
-            >
-              <Tab label="Usuarios" value="1" />
-              <Tab label="Proyectos" value="2" />
-              <Tab label="Listas" value="3" />
-              <Tab label="Tareas" value="4" />
-            </Tabs>
+            <TabContext value={value}>
+              <Stack>
+                <Tabs
+                  value={value}
+                  onChange={(event, newValue) => setValue(newValue)}
+                  variant="scrollable"
+                  scrollButtons
+                  allowScrollButtonsMobile
+                  aria-label="scrollable force tabs example"
+                >
+                  <Tab label="Usuarios" value="1" />
+                  <Tab label="Proyectos" value="2" />
+                  <Tab label="Listas" value="3" />
+                  <Tab label="Tareas" value="4" />
+                </Tabs>
+              </Stack>
+              <TabPanel value="1"><UsersSearchComponent/></TabPanel>
+              <TabPanel value="2"><ProjectsSearchComponent/></TabPanel>
+              <TabPanel value="3"><ListsSearchComponent/></TabPanel>
+              <TabPanel value="4"><TasksSearchComponent/></TabPanel>
+            </TabContext>
           </Stack>
-          <TabPanel value="1"><UsersSearchComponent/></TabPanel>
-          <TabPanel value="2"><ProjectsSearchComponent/></TabPanel>
-          <TabPanel value="3"><ListsSearchComponent/></TabPanel>
-          <TabPanel value="4"><TasksSearchComponent/></TabPanel>
-        </TabContext>
-      </Stack>
-    </ContentWrapper>
+        </ContentWrapper>
+      : <ContentWrapper>
+        <p>No tienes permisos para acceder a esta página.</p>
+      </ContentWrapper> }
+    </>
   );
 }
 
 const ContentWrapper = styled.section`
   && {
-    width: 100%;
+    width: -webkit-fill-available;
     padding-inline: 1rem;
     padding-block: 2rem;
     margin-right: auto;

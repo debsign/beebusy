@@ -63,7 +63,7 @@ const UsersSearchComponent = () => {
     fetchUsers();
   }, []);
   if (isLoading) {
-    return <div>Cargando...</div>;
+    return <div className='loader'></div>;
   }
   // Buscar user
   const usersFiltrados = Array.isArray(users) ? users.filter(user => 

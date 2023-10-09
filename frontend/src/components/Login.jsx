@@ -19,10 +19,11 @@ function Login() {
     });
 
     const data = await response.json();
-    console.log("DATOS: ", data);
+    // console.log("DATOS: ", data);
     // token
     localStorage.setItem('token', data.token);
     localStorage.setItem('role', data.role);
+    localStorage.setItem('userID', data.userID);
 
     if (!response.ok) {
       console.log(data);
