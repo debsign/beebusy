@@ -73,7 +73,7 @@ function AppContent() {
 
 const OuterContainer = styled.div`
   height: 100vh;
-  overflow: hidden;
+  /* overflow: hidden; */
   display: flex;
   flex-direction: column;
 `;

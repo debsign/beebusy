@@ -23,6 +23,7 @@ import { selectHasNewNotifications } from '../features/notificationSlice';
 import logo from './assets/images/bee.png';
 
 import { useAuth } from './AuthContext';
+import StyledLink from './components/style/StyledLink';
 
 function Header({ toggleDark, handleModeChange }) {
     // 1. Definición de variables
@@ -185,12 +186,20 @@ function Header({ toggleDark, handleModeChange }) {
             <MenuStyled isOpen={isMenuOpen}>
                 <Link to="/"><Logo src={logo} alt="BeeBusy Logo"/></Link>
                 <NavStyled>
-                    <Link to="/about">Acerca de</Link>
-                    <Link to="/contact">Contacto</Link>
-                    <Link to="/login"></Link>
-                    <Link to="/register">Registrarse</Link>
-                    <Link to="/dashboard">Dashboard</Link>
-                    <Link to="/admin">Admin Dashboard</Link>
+                    <StyledLink to="/about">Acerca de</StyledLink>
+                    <StyledLink to="/contact">Contacto</StyledLink>
+                    {!isAuthenticated &&
+                        <>
+                            <StyledLink to="/login">Iniciar sesión</StyledLink>
+                            <StyledLink to="/register">Registrarse</StyledLink>
+                        </>
+                    }
+                    {isAuthenticated &&
+                        <>
+                            <StyledLink to="/dashboard">Dashboard</StyledLink>
+                            <StyledLink to="/admin">Admin Dashboard</StyledLink>
+                        </>
+                    }
                 </NavStyled>
             </MenuStyled>
         </>
@@ -200,6 +209,7 @@ function Header({ toggleDark, handleModeChange }) {
 }
 const HeaderStyled = styled.header`
     && {
+        background-color: var(--white);
         position: fixed;
         top: 0;
         width: 100%;
@@ -216,24 +226,34 @@ const HeaderStyled = styled.header`
         display: flex;
         align-items: center;
     }
-`;
+    `;
 const MenuStyled = styled.div`
+    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
     position: fixed;
     height: 100vh;
     width: 0px;
-    background: #111111;
+    background-color: var(--white);
     overflow: hidden;
     transition: 0.5s ease;
     z-index: 2;
-
     ${props => props.isOpen && css`
         width: 250px;
     `}
+    && > a {
+        text-align: center;
+        width: 100%;
+        display: block;
+        padding-block: 1rem;
+    }
 `;
 
 const NavStyled = styled.nav`
   display: flex;
   flex-direction: column;
+  padding-inline: 1rem;
+  && > a {
+    padding-block: 10px;
+  }
 `;
 
 const Overlay = styled.div`
@@ -251,13 +271,13 @@ const Logo = styled.img`
   height: 30px;
 `;
 const RedSpot = styled.span`
-    position: 'absolute';
-    top: 0;
+    position: absolute;
+    bottom: 0;
     right: 0;
     width: 10px;
     height: 10px;
-    background-color: 'red';
-    border-radius: '50%';
+    background-color: red;
+    border-radius: 50%;
 `;
 
 export default Header

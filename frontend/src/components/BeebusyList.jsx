@@ -13,7 +13,7 @@ const BeebusyList = ({ projectId: projectIdentifier, onAddCard }) => {
   const [tasks, setTasks] = useState([]);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-// Obtenemos las listas
+  // Obtenemos las listas
   useEffect(() => {
     const fetchListTitles = async () => {
       const token = localStorage.getItem('token');
@@ -42,27 +42,72 @@ const BeebusyList = ({ projectId: projectIdentifier, onAddCard }) => {
     };
     fetchListTitles();
   }, [BASE_URL, projectId]);
-// Obtenemos las tareas
-useEffect(() => {
-  const fetchTasksTitles = async () => {
+  // Obtenemos las tareas
+  useEffect(() => {
+    const fetchTasksTitles = async () => {
+      const token = localStorage.getItem('token');
+      if(!token){
+        console.error('Token no encontrado');
+        return;
+      }
+      try {
+        const response = await fetch(`${BASE_URL}/api/tasks/`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        if(response.ok) {
+          const data = await response.json();
+          const projectTasks = data.filter(task => task.projects?.[0]?._id === projectId);
+
+
+          const tasksByList = lists.reduce((acc, list) => {
+            acc[list._id] = projectTasks.filter(task => 
+              task.lists[0]._id === list._id
+            );
+            return acc;
+          }, {});
+          
+          setTasks(tasksByList);
+        } else {
+          console.error('Error al obtener las tareas: ', await response.text());
+        }
+      } catch (error) {
+        console.error('Error al obtener las tareas: ', error);
+      }
+    };
+    fetchTasksTitles();
+  }, [BASE_URL, lists, projectId]);
+  // Actualiza las tareas
+  const updateTaskList = (taskId, newListId) => {
     const token = localStorage.getItem('token');
-    if(!token){
+    if (!token) {
       console.error('Token no encontrado');
       return;
     }
-    try {
-      const response = await fetch(`${BASE_URL}/api/tasks/`, {
-        method: 'GET',
-        headers: {
+    fetch(`${BASE_URL}/api/task/${taskId}`, {
+      method: 'PUT',
+      headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        }
-      });
-      if(response.ok) {
-        const data = await response.json();
+      },
+      body: JSON.stringify({
+        lists: newListId // ID de la nueva lista
+      })
+    })
+    .then(() => {
+      // Recargar los tasks después de actualizar uno
+      fetch(`${BASE_URL}/api/tasks`, {
+          headers: { 
+              'Authorization': `Bearer ${token}`,
+          },
+      })
+      .then(response => response.json())
+      .then(data => {
         const projectTasks = data.filter(task => task.projects?.[0]?._id === projectId);
-
-
+  
         const tasksByList = lists.reduce((acc, list) => {
           acc[list._id] = projectTasks.filter(task => 
             task.lists[0]._id === list._id
@@ -71,23 +116,27 @@ useEffect(() => {
         }, {});
         
         setTasks(tasksByList);
-      } else {
-        console.error('Error al obtener las tareas: ', await response.text());
-      }
-    } catch (error) {
-      console.error('Error al obtener las tareas: ', error);
-    }
-  };
-  fetchTasksTitles();
-}, [BASE_URL, lists, projectId]);
+      })
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
 // Configuramos onDragEnd
 const onDragEnd = (result) => {
-  const { source, destination } = result;
+  // Propiedades que nos ofrece el objeto result
+  // source: lista desde la que se mueve la tarea
+  // destination: lista a la que se mueve la tarea
+  // draggableId: id de la tarea que se mueve
+  const { source, destination, draggableId } = result;
   if (!destination) return;
+  console.log('Source:', source);
+  console.log('Destination:', destination);
 
   // Obtén el array de tareas para la lista de origen
   const sourceTasks = tasks[source.droppableId];
   if (!sourceTasks) return;
+  console.log('lista de origen de la tarea:', sourceTasks);
 
   // Crea una copia del array para modificarlo
   const updatedTasks = Array.from(sourceTasks);
@@ -101,6 +150,9 @@ const onDragEnd = (result) => {
     ...prev,
     [source.droppableId]: updatedTasks
   }));
+
+  // Solicitud a la API para actualizar la lista de la tarea en la base de datos
+  updateTaskList(draggableId, destination.droppableId);
 };
 
   return (
@@ -112,7 +164,7 @@ const onDragEnd = (result) => {
             <ListTitle name={list.name} />
             <Droppable droppableId={list._id}>
               {(provided, snapshot) => (
-                <div
+                <DraggableColumn
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
@@ -143,7 +195,7 @@ const onDragEnd = (result) => {
                     </Draggable>
                   ))}
                   {provided.placeholder}
-                </div>
+                </DraggableColumn>
               )}
             </Droppable>
             <AddNewElement type="card" onAdd={onAddCard}/>
@@ -161,6 +213,11 @@ const StyledPaper = styled(Paper)`
     background-color: var(--yellowjs);
     margin-bottom: 2rem;
     padding: 0.5rem;
+  }
+`;
+const DraggableColumn = styled.div`
+  && {
+    min-height: 10px;
   }
 `;
 

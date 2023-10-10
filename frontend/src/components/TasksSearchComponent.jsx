@@ -19,6 +19,10 @@ import FormControl from '@mui/material/FormControl';
 
 import moment from 'moment';
 
+// Redux
+import { useDispatch } from 'react-redux';
+import { setHasNewNotifications } from "../../features/notificationSlice";
+
 const TasksSearchComponent = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +41,7 @@ const TasksSearchComponent = () => {
   const [currentTaskId, setCurrentTaskId] = useState(null);
   const [projectUsers, setProjectUsers] = useState([]);
   const [projectLists, setProjectLists] = useState([]);
+  const dispatch = useDispatch();
   // Proyectos de la tarea
   const [projects, setProjects] = useState([]);
   useEffect(() => {
@@ -332,6 +337,11 @@ const TasksSearchComponent = () => {
   };
   // Notificar al usuario cuando se añade tarea
   const notifyUser = async (userId, message) => {
+    // Si el ID del usuario al que se le asigna la tarea no es igual al ID del usuario logueado, no notificamos
+    const currentUserId = localStorage.getItem('userID');
+    if (userId !== currentUserId) {
+        return;
+    }
     const token = localStorage.getItem('token');
     if (!token){
         console.error('Token no encontrado');
@@ -352,6 +362,8 @@ const TasksSearchComponent = () => {
         }
 
         console.log('Alerta enviada:', await response.json());
+        // Redux
+        dispatch(setHasNewNotifications(true));
     } catch (error) {
         console.error('Error al enviar la alerta:', error);
     }
