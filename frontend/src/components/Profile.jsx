@@ -1,23 +1,24 @@
-import React from 'react';
-import styled from 'styled-components';
-import UserSettings from './UserSettings';
+import React from "react";
+import styled from "styled-components";
+import UserSettings from "./UserSettings";
 
 function Profile() {
-  const role = localStorage.getItem('role');
-  
+  const role = localStorage.getItem("role");
+
   return (
     <>
-    {role ? 
-      <ContentWrapper>
-        <h1>Bienvenido a tu perfil</h1>
-        <p>Aquí podrás editar tus datos de usuario:</p>
-        <UserSettings />
-      </ContentWrapper>
-      : <ContentWrapper>
+      {role ? (
+        <ContentWrapper>
+          <h1>Bienvenido a tu perfil</h1>
+          <p>Aquí podrás editar tus datos de usuario:</p>
+          <UserSettings />
+        </ContentWrapper>
+      ) : (
+        <ContentWrapper>
           <p>Inicia sesión o regístrate para acceder a esta página.</p>
-        </ContentWrapper> }
+        </ContentWrapper>
+      )}
     </>
-    
   );
 }
 

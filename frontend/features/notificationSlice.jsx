@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const notificationSlice = createSlice({
-  name: 'notification',
+  name: "notification",
   initialState: {
     hasNewNotifications: false,
   },
@@ -14,6 +14,7 @@ export const notificationSlice = createSlice({
 
 export const { setHasNewNotifications } = notificationSlice.actions;
 
-export const selectHasNewNotifications = (state) => state.notification.hasNewNotifications;
+export const selectHasNewNotifications = (state) =>
+  state.notification.hasNewNotifications;
 
 export default notificationSlice.reducer;

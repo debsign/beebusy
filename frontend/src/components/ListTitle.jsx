@@ -1,12 +1,12 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 const ListTitle = ({ name }) => {
-    return (
-      <StyledListTitleWrapper>
-        <StyledListTitle>{name}</StyledListTitle>
-      </StyledListTitleWrapper>
-    );
-  };
+  return (
+    <StyledListTitleWrapper>
+      <StyledListTitle>{name}</StyledListTitle>
+    </StyledListTitleWrapper>
+  );
+};
 
 const StyledListTitle = styled.h1`
   && {
@@ -24,4 +24,4 @@ const StyledListTitleWrapper = styled.div`
   }
 `;
 
-export default ListTitle
+export default ListTitle;

@@ -1,57 +1,87 @@
-// Dashboard.js
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import Stack from '@mui/material/Stack';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Stack from "@mui/material/Stack";
 
-import { useDispatch } from 'react-redux';
-import { setHasNewNotifications } from '../../features/notificationSlice';
+import { useDispatch } from "react-redux";
+import { setHasNewNotifications } from "../../features/notificationSlice";
 
 function Dashboard() {
   // 1. Definición de variables
   const BASE_URL = import.meta.env.VITE_BASE_URL;
-  const role = localStorage.getItem('role');
+  const role = localStorage.getItem("role");
   const [alerts, setAlerts] = useState([]);
-  const userID = localStorage.getItem('userID');
+  const userID = localStorage.getItem("userID");
 
   const dispatch = useDispatch();
   // 2. Funciones
   useEffect(() => {
-      const fetchAlerts = async () => {
-        const token = localStorage.getItem('token');
-        if (!token){
-            console.error('Token no encontrado');
-            return;
+    const fetchAlerts = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Token no encontrado");
+        return;
+      }
+      try {
+        const response = await fetch(`${BASE_URL}/api/user/${userID}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          // console.log("Response:", response);
+          const data = await response.json();
+          // console.log("Data:", data);
+
+          // Como queremos las alertas ordenadas de más recientes a menos, utilizamos la función "sort"
+          const sortedAlerts = data.alerts.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          setAlerts(sortedAlerts);
+        } else {
+          console.error("Error al obtener las alertas:", await response.text());
         }
-        try {
-          const response = await fetch(`${BASE_URL}/api/user/${userID}`, {
-              method: 'GET',
-              headers: {
-                  'Authorization': `Bearer ${token}`,
-                  'Content-Type': 'application/json'
-              }
-          });
+      } catch (error) {
+        console.error("Error al realizar fetch de alertas:", error);
+      }
+    };
 
-          if (response.ok) {
-              console.log('Response:', response);
-              const data = await response.json();
-              console.log('Data:', data);
-
-              // Como queremos las alertas ordenadas de más recientes a menos, utilizamos la función "sort"
-              const sortedAlerts = data.alerts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-              setAlerts(sortedAlerts);
-          } else {
-              console.error('Error al obtener las alertas:', await response.text());
-          }
-
-        } catch (error) {
-            console.error('Error al realizar fetch de alertas:', error);
+    fetchAlerts();
+  }, [userID, alerts]);
+  const deleteAlert = async (alertId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token no encontrado");
+      return;
+    }
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/user/${userID}/alert/${alertId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      };
+      );
+      if (!response.ok) {
+        console.error("Error al eliminar la alerta:", await response.text());
+        return;
+      }
+      // Elimina la alerta del estado
+      setAlerts((prevAlerts) =>
+        prevAlerts.filter((alert) => alert._id !== alertId)
+      );
+    } catch (error) {
+      console.error("Error al eliminar la alerta:", error);
+    }
+  };
 
-      fetchAlerts();
-  }, [userID]);
   useEffect(() => {
     // Esto se ejecutará cuando el componente se monte
     // y actualizará el estado Redux a false.
@@ -60,27 +90,29 @@ function Dashboard() {
   // 3. Resultado
   return (
     <>
-    {role ? 
-      <ContentWrapper>
-        <h1>Bienvenido a tu dashboard</h1>
-        <p>Aquí podrás ver tus alertas:</p>
-        <Stack sx={{ width: '100%' }} spacing={2}>
-        {alerts && alerts.map(alert => (
-            <div key={alert._id}>
-              <Alert severity="info">
-                <AlertTitle>Info</AlertTitle>
-                {alert.message}
-                <p>{new Date(alert.createdAt).toLocaleString()}</p>
-              </Alert>
-            </div>
-        ))}
-        </Stack>
-      </ContentWrapper>
-      : <ContentWrapper>
+      {role ? (
+        <ContentWrapper>
+          <h2>Bienvenido a tu dashboard</h2>
+          <p>Aquí podrás ver tus alertas:</p>
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            {alerts &&
+              alerts.map((alert) => (
+                <div key={alert._id}>
+                  <Alert severity="info" onClose={() => deleteAlert(alert._id)}>
+                    <AlertTitle>Info</AlertTitle>
+                    {alert.message}
+                    <p>{new Date(alert.createdAt).toLocaleString()}</p>
+                  </Alert>
+                </div>
+              ))}
+          </Stack>
+        </ContentWrapper>
+      ) : (
+        <ContentWrapper>
           <p>Inicia sesión o regístrate para acceder a esta página.</p>
-        </ContentWrapper> }
+        </ContentWrapper>
+      )}
     </>
-    
   );
 }
 
@@ -88,7 +120,8 @@ const ContentWrapper = styled.section`
   && {
     width: -webkit-fill-available;
     padding-inline: 1rem;
-    padding-block: 2rem;
+    padding-top: 4rem;
+    padding-bottom: 6rem;
     margin-right: auto;
     margin-left: auto;
   }

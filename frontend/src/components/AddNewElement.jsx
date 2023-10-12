@@ -1,29 +1,35 @@
-import { Collapse, Fade, Paper } from "@mui/material"
-import { useState } from "react"
-import styled from "styled-components"
-import AddNewElementTitle from "./AddNewElementTitle"
+import { Collapse, Fade, Paper } from "@mui/material";
+import { useState } from "react";
+import styled from "styled-components";
+import AddNewElementTitle from "./AddNewElementTitle";
 
-
-const AddNewElement = ({ type, onAdd, projectId }) => {
-    const [open, setOpen] = useState(false)
-    return (
-        <StyledNewElementWrapper>
-            <Collapse in={open}>
-                <AddNewElementTitle type={type} setOpen={setOpen} onAdd={onAdd} projectId={projectId}/>
-            </Collapse>
-            <Collapse in={!open}>
-                <StyledPaper onClick={()=>setOpen(true)}>
-                    { type === "card" ? "+ Añade una nueva tarea" : "+ Añade una nueva lista" }
-                </StyledPaper>
-            </Collapse>
-            
-        </StyledNewElementWrapper>
-    )
-}
+const AddNewElement = ({ type, projectId, listId, onAdd }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <StyledNewElementWrapper>
+      <Collapse in={open}>
+        <AddNewElementTitle
+          type={type}
+          setOpen={setOpen}
+          projectId={projectId}
+          listId={listId}
+          onAdd={onAdd}
+        />
+      </Collapse>
+      <Collapse in={!open}>
+        <StyledPaper onClick={() => setOpen(true)}>
+          {type === "card"
+            ? "+ Añade una nueva tarea"
+            : "+ Añade una nueva lista"}
+        </StyledPaper>
+      </Collapse>
+    </StyledNewElementWrapper>
+  );
+};
 const StyledNewElementWrapper = styled.div`
-    && {
-        width: 100%;
-    }
+  && {
+    width: 100%;
+  }
 `;
 const StyledPaper = styled(Paper)`
   && {
@@ -36,4 +42,4 @@ const StyledPaper = styled(Paper)`
   }
 `;
 
-export default AddNewElement
+export default AddNewElement;

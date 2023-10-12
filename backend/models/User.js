@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const AlertSchema = new mongoose.Schema({
   message: String,
@@ -10,10 +10,10 @@ const UserSchema = new mongoose.Schema({
   lastName: String,
   email: { type: String, unique: true },
   password: String,
-  role: { type: String, default: 'worker' }, // 'admin' or 'worker'
-  avatar: { type: String, default: 'default' },
+  role: { type: String, default: "worker" }, // 'admin' or 'worker'
+  avatar: { type: String, default: "default" },
   alerts: [AlertSchema],
 });
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model("User", UserSchema);
 module.exports = User;
