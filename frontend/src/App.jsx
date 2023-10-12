@@ -26,9 +26,23 @@ function App() {
 
   const myTheme = createTheme({
     palette: {
-      type: toggleDark ? "dark" : "light",
+      type: toggleDark ? "light" : "dark",
       background: {
-        default: toggleDark ? "#333" : "#fff",
+        default: toggleDark ? "#fff" : "#333",
+      },
+      text: {
+        primary: toggleDark ? "#000" : "#fff", // Color del texto principal
+        secondary: toggleDark
+          ? "rgba(0, 0, 0, 0.54)"
+          : "rgba(255, 255, 255, 0.54)", // Color del texto secundario
+      },
+      header: {
+        background: toggleDark ? "#f9f9f9" : "#1a1a1a",
+        color: toggleDark ? "#000" : "#fff",
+      },
+      footer: {
+        background: toggleDark ? "#F0DB4F" : "#1a1a1a",
+        color: toggleDark ? "#000" : "#fff",
       },
     },
   });
@@ -40,8 +54,8 @@ function App() {
     <AuthProvider>
       <ThemeProvider theme={myTheme}>
         <BrowserRouter>
-          <GlobalStyles />
           <Header toggleDark={toggleDark} handleModeChange={handleModeChange} />
+          <GlobalStyles />
           <OuterContainer>
             <DragDropContext>
               <AppContent />

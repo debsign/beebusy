@@ -214,7 +214,6 @@ function Header({ toggleDark, handleModeChange }) {
 }
 const HeaderStyled = styled.header`
   && {
-    background-color: var(--white);
     position: fixed;
     top: 0;
     width: 100%;

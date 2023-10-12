@@ -15,7 +15,7 @@ const Footer = () => {
 const FooterWrapper = styled.footer`
   text-align: center;
   padding: 20px;
-  background-color: var(--yellowjslighter);
+  /* background-color: var(--yellowjslighter); */
   position: fixed;
   width: 100%;
   bottom: 0;
