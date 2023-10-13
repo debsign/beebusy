@@ -3,12 +3,16 @@ import styled from "styled-components";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
 
 import { useDispatch } from "react-redux";
 import { setHasNewNotifications } from "../../features/notificationSlice";
 
 function Dashboard() {
   // 1. Definición de variables
+  const theme = useTheme();
+  const bgColor = theme.palette.background.default;
+  const color = theme.palette.text.primary;
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const role = localStorage.getItem("role");
   const [alerts, setAlerts] = useState([]);
@@ -91,7 +95,7 @@ function Dashboard() {
   return (
     <>
       {role ? (
-        <ContentWrapper>
+        <ContentWrapper bgColor={bgColor} color={color}>
           <h2>Bienvenido a tu dashboard</h2>
           <p>Aquí podrás ver tus alertas:</p>
           <Stack sx={{ width: "100%" }} spacing={2}>
@@ -108,7 +112,7 @@ function Dashboard() {
           </Stack>
         </ContentWrapper>
       ) : (
-        <ContentWrapper>
+        <ContentWrapper bgColor={bgColor} color={color}>
           <p>Inicia sesión o regístrate para acceder a esta página.</p>
         </ContentWrapper>
       )}
@@ -118,12 +122,15 @@ function Dashboard() {
 
 const ContentWrapper = styled.section`
   && {
+    background-color: ${(props) => props.bgColor};
+    color: ${(props) => props.color};
     width: -webkit-fill-available;
     padding-inline: 1rem;
     padding-top: 4rem;
     padding-bottom: 6rem;
     margin-right: auto;
     margin-left: auto;
+    height: -webkit-fill-available;
   }
 `;
 

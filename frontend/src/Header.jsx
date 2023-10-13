@@ -24,8 +24,12 @@ import logo from "./assets/images/bee.png";
 
 import { useAuth } from "./AuthContext";
 import StyledLink from "./components/style/StyledLink";
+import { useTheme } from "@mui/material/styles";
 
 function Header({ toggleDark, handleModeChange }) {
+  const theme = useTheme();
+  const bgColor = theme.palette.header.background;
+  const color = theme.palette.header.color;
   // 1. Definición de variables
   const { isAuthenticated, logout } = useAuth();
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -156,34 +160,51 @@ function Header({ toggleDark, handleModeChange }) {
                 "aria-labelledby": "basic-button",
               }}
             >
-              <MenuItem
+              <MenuItemStyled
+                bgcolor={bgColor}
+                color={color}
                 onClick={() => {
                   handleClose();
                   navigate("/profile");
+                }}
+                sx={{
+                  backgroundColor: bgColor,
                 }}
               >
                 <ListItemIcon>
                   <AccountCircleIcon fontSize="small" />
                 </ListItemIcon>{" "}
                 Mi perfil
-              </MenuItem>
-              <MenuItem
+              </MenuItemStyled>
+              <MenuItemStyled
+                bgcolor={bgColor}
+                color={color}
                 onClick={() => {
                   handleClose();
                   navigate("/dashboard");
+                }}
+                sx={{
+                  backgroundColor: bgColor,
                 }}
               >
                 <ListItemIcon>
                   <Settings fontSize="small" />
                 </ListItemIcon>
                 Mi escritorio
-              </MenuItem>
-              <MenuItem onClick={logout}>
+              </MenuItemStyled>
+              <MenuItemStyled
+                bgcolor={bgColor}
+                color={color}
+                onClick={logout}
+                sx={{
+                  backgroundColor: bgColor,
+                }}
+              >
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>
                 Cerrar sesión
-              </MenuItem>
+              </MenuItemStyled>
             </Menu>
           </div>
         )}
@@ -230,6 +251,12 @@ const HeaderStyled = styled.header`
   div {
     display: flex;
     align-items: center;
+  }
+`;
+const MenuItemStyled = styled(MenuItem)`
+  &&:hover {
+    background-color: ${(props) => props.bgcolor};
+    color: ${(props) => props.color};
   }
 `;
 const MenuStyled = styled.div`

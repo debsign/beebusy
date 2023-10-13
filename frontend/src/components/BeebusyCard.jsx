@@ -16,6 +16,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import moment from "moment";
 import styled from "styled-components";
+import { useTheme } from "@mui/material/styles";
 
 // Redux
 import { useDispatch } from "react-redux";
@@ -28,6 +29,8 @@ const BeebusyCard = ({
   onUpdateTask,
   projectName,
 }) => {
+  const theme = useTheme();
+  const bgColor = theme.palette.dialog.background;
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [tasks, setTasks] = useState([]);
   const [initialTask, setInitialTask] = useState({
@@ -239,7 +242,15 @@ const BeebusyCard = ({
 
   return (
     <>
-      <Dialog open={openDialog} onClose={handleDialogClose}>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: bgColor,
+          },
+        }}
+      >
         <DialogTitle>Editar tarea</DialogTitle>
         <DialogContent>
           <TextField
@@ -253,7 +264,7 @@ const BeebusyCard = ({
             value={newTask.name}
             onChange={handleChange}
           />
-          <FormControl fullWidth>
+          <StyledFormControl fullWidth variant="standard">
             <InputLabel id="users-label">Usuarios</InputLabel>
             <Select
               labelId="users-label"
@@ -272,7 +283,7 @@ const BeebusyCard = ({
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
+          </StyledFormControl>
           <TextField
             margin="dense"
             name="startDate"
@@ -331,5 +342,9 @@ const StyledPaper = styled(Paper)`
     margin: 0;
   }
 `;
-
+const StyledFormControl = styled(FormControl)`
+  && {
+    margin-block: 10px;
+  }
+`;
 export default BeebusyCard;

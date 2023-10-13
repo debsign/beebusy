@@ -17,7 +17,11 @@ import {
   DialogActions,
 } from "@mui/material";
 
+import { useTheme } from "@mui/material/styles";
+
 const ListsSearchComponent = () => {
+  const theme = useTheme();
+  const bgColor = theme.palette.dialog.background;
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [isLoading, setIsLoading] = useState(true);
   const [lists, setLists] = useState([]);
@@ -217,7 +221,15 @@ const ListsSearchComponent = () => {
           Añadir lista
         </Button>
       </div>
-      <Dialog open={openDialog} onClose={handleDialogClose}>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: bgColor,
+          },
+        }}
+      >
         <DialogTitle>
           {editMode ? "Editar lista" : "Añadir nueva lista"}
         </DialogTitle>
@@ -246,7 +258,7 @@ const ListsSearchComponent = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table sx={{ minWidth: 700 }} aria-label="lists table">
           <TableHead>
             <TableRow>

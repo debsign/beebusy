@@ -17,7 +17,11 @@ import {
   DialogActions,
 } from "@mui/material";
 
+import { useTheme } from "@mui/material/styles";
+
 const UsersSearchComponent = () => {
+  const theme = useTheme();
+  const bgColor = theme.palette.dialog.background;
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState([]);
@@ -234,7 +238,15 @@ const UsersSearchComponent = () => {
           Añadir user
         </Button>
       </div>
-      <Dialog open={openDialog} onClose={handleDialogClose}>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: bgColor,
+          },
+        }}
+      >
         <DialogTitle>
           {editMode ? "Editar user" : "Añadir nuevo user"}
         </DialogTitle>
@@ -303,7 +315,7 @@ const UsersSearchComponent = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table sx={{ minWidth: 700 }} aria-label="users table">
           <TableHead>
             <TableRow>

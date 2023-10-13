@@ -4,8 +4,12 @@ import styled from "styled-components";
 
 import image from "../assets/images/beebusy_main_img-removebg-preview.png";
 import StyledLink from "./style/StyledLink";
+import { useTheme } from "@mui/material/styles";
 
 const ProjectList = () => {
+  const theme = useTheme();
+  const bgColor = theme.palette.background.default;
+  const color = theme.palette.text.primary;
   const [projects, setProjects] = useState([]);
   const role = localStorage.getItem("role");
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -44,7 +48,7 @@ const ProjectList = () => {
   return (
     <div>
       {role === "admin" || role === "worker" ? (
-        <ProjectListWrapper>
+        <ProjectListWrapper bgColor={bgColor} color={color}>
           <h1>Proyectos</h1>
           <ProjectListContent>
             {projects.map((project) => (
@@ -53,15 +57,17 @@ const ProjectList = () => {
                   style={{ color: "var(--blackjsdarker)" }}
                   to={`/projects/${project._id}`}
                 >
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
+                  <SubtitleStyled color={color}>{project.title}</SubtitleStyled>
+                  <DescriptionStyled color={color}>
+                    {project.description}
+                  </DescriptionStyled>
                 </Link>
               </ProjectListTitle>
             ))}
           </ProjectListContent>
         </ProjectListWrapper>
       ) : (
-        <ProjectListWrapper>
+        <ProjectListWrapper bgColor={bgColor} color={color}>
           <h1>
             <span style={{ color: "var(--yellowjs)", fontWeight: "400" }}>
               Bee
@@ -86,11 +92,14 @@ const ProjectList = () => {
 
 const ProjectListWrapper = styled.section`
   && {
+    background-color: ${(props) => props.bgColor};
+    color: ${(props) => props.color};
     padding-inline: 1rem;
     padding-block: 2rem;
     margin-right: auto;
     margin-left: auto;
     text-align: center;
+    height: 100vh;
   }
 `;
 const ProjectListContent = styled.div`
@@ -98,6 +107,16 @@ const ProjectListContent = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-column-gap: 1.4em;
+  }
+`;
+const SubtitleStyled = styled.h3`
+  && {
+    color: ${(props) => props.color};
+  }
+`;
+const DescriptionStyled = styled.p`
+  && {
+    color: ${(props) => props.color};
   }
 `;
 const ProjectListTitle = styled.div`

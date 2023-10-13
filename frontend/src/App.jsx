@@ -31,6 +31,7 @@ function App() {
         default: toggleDark ? "#fff" : "#333",
       },
       text: {
+        default: toggleDark ? "#000" : "#fff",
         primary: toggleDark ? "#000" : "#fff", // Color del texto principal
         secondary: toggleDark
           ? "rgba(0, 0, 0, 0.54)"
@@ -43,6 +44,9 @@ function App() {
       footer: {
         background: toggleDark ? "#F0DB4F" : "#1a1a1a",
         color: toggleDark ? "#000" : "#fff",
+      },
+      dialog: {
+        background: toggleDark ? "#FFD700" : "#1a1a1a",
       },
     },
   });

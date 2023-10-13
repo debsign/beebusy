@@ -24,7 +24,11 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 
+import { useTheme } from "@mui/material/styles";
+
 const ProjectsSearchComponent = () => {
+  const theme = useTheme();
+  const bgColor = theme.palette.dialog.background;
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [isLoading, setIsLoading] = useState(true);
   const [projects, setProjects] = useState([]);
@@ -356,7 +360,15 @@ const ProjectsSearchComponent = () => {
           Añadir proyecto
         </Button>
       </div>
-      <Dialog open={openDialog} onClose={handleDialogClose}>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: bgColor,
+          },
+        }}
+      >
         <DialogTitle>
           {editMode ? "Editar proyecto" : "Añadir nuevo proyecto"}
         </DialogTitle>
@@ -432,7 +444,7 @@ const ProjectsSearchComponent = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table sx={{ minWidth: 700 }} aria-label="projects table">
           <TableHead>
             <TableRow>

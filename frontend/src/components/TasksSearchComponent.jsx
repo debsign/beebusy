@@ -24,6 +24,8 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 
+import { useTheme } from "@mui/material/styles";
+
 import moment from "moment";
 
 // Redux
@@ -31,6 +33,8 @@ import { useDispatch } from "react-redux";
 import { setHasNewNotifications } from "../../features/notificationSlice";
 
 const TasksSearchComponent = () => {
+  const theme = useTheme();
+  const bgColor = theme.palette.dialog.background;
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [isLoading, setIsLoading] = useState(true);
   const [tasks, setTasks] = useState([]);
@@ -450,7 +454,15 @@ const TasksSearchComponent = () => {
           Añadir tarea
         </Button>
       </div>
-      <Dialog open={openDialog} onClose={handleDialogClose}>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: bgColor,
+          },
+        }}
+      >
         <DialogTitle>
           {editMode ? "Editar tarea" : "Añadir nueva tarea"}
         </DialogTitle>
@@ -568,7 +580,7 @@ const TasksSearchComponent = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table sx={{ minWidth: 700 }} aria-label="tasks table">
           <TableHead>
             <TableRow>
