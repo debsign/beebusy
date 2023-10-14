@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
+import Button from "@mui/material/Button";
 import image from "../assets/images/beebusy_main_img-removebg-preview.png";
-import StyledLink from "./style/StyledLink";
 import { useTheme } from "@mui/material/styles";
 
 const ProjectList = () => {
@@ -67,29 +66,61 @@ const ProjectList = () => {
           </ProjectListContent>
         </ProjectListWrapper>
       ) : (
-        <ProjectListWrapper bgColor={bgColor} color={color}>
+        <HomeWrapper bgColor={bgColor} color={color}>
           <h1>
             <span style={{ color: "var(--yellowjs)", fontWeight: "400" }}>
               Bee
             </span>
             busy
           </h1>
-          <p>
-            <StyledLink to="/login">Inicia sesión</StyledLink> o{" "}
-            <StyledLink to="/register">regístrate</StyledLink>
-          </p>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+          >
+            <Button
+              component={Link}
+              to="/login"
+              variant="contained"
+              color="primary"
+            >
+              Inicia sesión
+            </Button>
+            <Button
+              component={Link}
+              to="/register"
+              variant="contained"
+              color="secondary"
+            >
+              Regístrate
+            </Button>
+          </div>
           <img
             src={image}
             alt="Imagen pantalla principal"
             loading="lazy"
-            style={{ width: "100%" }}
+            style={{ position: "absolute", bottom: "60px" }}
           />
-        </ProjectListWrapper>
+        </HomeWrapper>
       )}
     </div>
   );
 };
 
+const HomeWrapper = styled.section`
+  && {
+    background-color: ${(props) => props.bgColor};
+    color: ${(props) => props.color};
+    padding-inline: 1rem;
+    padding-top: 2rem;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+`;
 const ProjectListWrapper = styled.section`
   && {
     background-color: ${(props) => props.bgColor};
@@ -99,7 +130,6 @@ const ProjectListWrapper = styled.section`
     margin-right: auto;
     margin-left: auto;
     text-align: center;
-    height: 100vh;
   }
 `;
 const ProjectListContent = styled.div`

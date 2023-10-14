@@ -20,7 +20,7 @@ const Footer = () => {
 
   return (
     <FooterWrapper bgColor={bgColor} color={color}>
-      <Typography variant="body2" color="textSecondary">
+      <Typography variant="body2">
         © {new Date().getFullYear()} BeeBusy
       </Typography>
     </FooterWrapper>

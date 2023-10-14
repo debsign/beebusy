@@ -9,7 +9,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AddNewElement from "./components/AddNewElement";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { DragDropContext } from "react-beautiful-dnd";
-// import { DragDropContext } from '@hello-pangea/dnd';
 
 // Importar los componentes de usuario
 import Login from "./components/Login";
@@ -26,27 +25,34 @@ function App() {
 
   const myTheme = createTheme({
     palette: {
-      type: toggleDark ? "light" : "dark",
+      type: toggleDark ? "dark" : "light",
       background: {
-        default: toggleDark ? "#fff" : "#333",
+        default: toggleDark ? "#333" : "#fff",
       },
       text: {
-        default: toggleDark ? "#000" : "#fff",
-        primary: toggleDark ? "#000" : "#fff", // Color del texto principal
+        default: toggleDark ? "#fff" : "#000",
+        primary: toggleDark ? "#fff" : "#000",
         secondary: toggleDark
-          ? "rgba(0, 0, 0, 0.54)"
-          : "rgba(255, 255, 255, 0.54)", // Color del texto secundario
+          ? "rgba(255, 255, 255, 0.54)"
+          : "rgba(0, 0, 0, 0.54)",
       },
       header: {
-        background: toggleDark ? "#f9f9f9" : "#1a1a1a",
-        color: toggleDark ? "#000" : "#fff",
+        background: toggleDark ? "#FFD700" : "#f9f9f9",
+        color: toggleDark ? "#fff" : "#000",
       },
       footer: {
-        background: toggleDark ? "#F0DB4F" : "#1a1a1a",
-        color: toggleDark ? "#000" : "#fff",
+        background: toggleDark ? "#FFD700" : "#F0DB4F",
+        color: toggleDark ? "#000" : "#000",
       },
       dialog: {
-        background: toggleDark ? "#FFD700" : "#1a1a1a",
+        background: toggleDark ? "#333" : "#FFD700",
+      },
+      // Botones
+      primary: {
+        main: toggleDark ? "#fff" : "#000",
+      },
+      secondary: {
+        main: toggleDark ? "#FFD700" : "#FFD700",
       },
     },
   });
@@ -94,7 +100,7 @@ function AppContent() {
 
 const OuterContainer = styled.div`
   height: 100vh;
-  padding-bottom: 100px;
+  /* padding-bottom: 100px; */
   /* overflow: hidden; */
   display: flex;
   flex-direction: column;

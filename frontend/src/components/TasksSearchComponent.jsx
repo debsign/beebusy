@@ -23,6 +23,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -467,106 +468,120 @@ const TasksSearchComponent = () => {
           {editMode ? "Editar tarea" : "Añadir nueva tarea"}
         </DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="name"
-            label="Nombre de la tarea"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={newTask.name || ""}
-            onChange={handleChange}
-          />
-          <StyledFormControl fullWidth variant="standard">
-            <InputLabel id="projects-label">Proyectos</InputLabel>
-            <Select
-              labelId="projects-label"
-              id="projects"
-              name="projects"
-              value={newTask.projects || ""}
-              onChange={handleChange}
-            >
-              {projects.map((project) => (
-                <MenuItem key={project._id} value={`${project.title}`}>
-                  {project.title}
-                </MenuItem>
-              ))}
-            </Select>
-          </StyledFormControl>
-          <StyledFormControl fullWidth variant="standard">
-            <InputLabel id="lists-label">Listas</InputLabel>
-            <Select
-              labelId="lists-label"
-              id="lists"
-              name="lists"
-              multiple
-              value={newTask.lists || ""}
-              onChange={handleChange}
-            >
-              {projectLists.map((list) => (
-                <MenuItem
-                  key={list._id}
-                  value={`${list.name}`}
-                  disabled={
-                    newTask.lists &&
-                    newTask.lists.length > 0 &&
-                    !newTask.lists.includes(list.name)
-                  }
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="name"
+                label="Nombre de la tarea"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={newTask.name || ""}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <StyledFormControl fullWidth variant="standard">
+                <InputLabel id="projects-label">Proyectos</InputLabel>
+                <Select
+                  labelId="projects-label"
+                  id="projects"
+                  name="projects"
+                  value={newTask.projects || ""}
+                  onChange={handleChange}
                 >
-                  {list.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </StyledFormControl>
-          <StyledFormControl fullWidth variant="standard">
-            <InputLabel id="users-label">Usuarios</InputLabel>
-            <Select
-              labelId="users-label"
-              id="users"
-              name="users"
-              multiple
-              value={newTask.users || []}
-              onChange={handleChange}
-            >
-              {projectUsers.map((user) => (
-                <MenuItem
-                  key={user._id}
-                  value={`${user.firstName} ${user.lastName}`}
+                  {projects.map((project) => (
+                    <MenuItem key={project._id} value={`${project.title}`}>
+                      {project.title}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </StyledFormControl>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <StyledFormControl fullWidth variant="standard">
+                <InputLabel id="lists-label">Listas</InputLabel>
+                <Select
+                  labelId="lists-label"
+                  id="lists"
+                  name="lists"
+                  multiple
+                  value={newTask.lists || ""}
+                  onChange={handleChange}
                 >
-                  {user.firstName} {user.lastName}
-                </MenuItem>
-              ))}
-            </Select>
-          </StyledFormControl>
-          <TextField
-            margin="dense"
-            name="startDate"
-            label="Fecha de inicio"
-            type="date"
-            focused
-            fullWidth
-            value={
-              newTask.startDate
-                ? moment(newTask.startDate).format("YYYY-MM-DD")
-                : ""
-            }
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="dueDate"
-            label="Fecha de final"
-            type="date"
-            focused
-            fullWidth
-            value={
-              newTask.dueDate
-                ? moment(newTask.dueDate).format("YYYY-MM-DD")
-                : ""
-            }
-            onChange={handleChange}
-          />
+                  {projectLists.map((list) => (
+                    <MenuItem
+                      key={list._id}
+                      value={`${list.name}`}
+                      disabled={
+                        newTask.lists &&
+                        newTask.lists.length > 0 &&
+                        !newTask.lists.includes(list.name)
+                      }
+                    >
+                      {list.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </StyledFormControl>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <StyledFormControl fullWidth variant="standard">
+                <InputLabel id="users-label">Usuarios</InputLabel>
+                <Select
+                  labelId="users-label"
+                  id="users"
+                  name="users"
+                  multiple
+                  value={newTask.users || []}
+                  onChange={handleChange}
+                >
+                  {projectUsers.map((user) => (
+                    <MenuItem
+                      key={user._id}
+                      value={`${user.firstName} ${user.lastName}`}
+                    >
+                      {user.firstName} {user.lastName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </StyledFormControl>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                margin="dense"
+                name="startDate"
+                label="Fecha de inicio"
+                type="date"
+                focused
+                fullWidth
+                value={
+                  newTask.startDate
+                    ? moment(newTask.startDate).format("YYYY-MM-DD")
+                    : ""
+                }
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                margin="dense"
+                name="dueDate"
+                label="Fecha de final"
+                type="date"
+                focused
+                fullWidth
+                value={
+                  newTask.dueDate
+                    ? moment(newTask.dueDate).format("YYYY-MM-DD")
+                    : ""
+                }
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancelar</Button>

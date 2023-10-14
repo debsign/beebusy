@@ -17,6 +17,8 @@ import {
   DialogActions,
 } from "@mui/material";
 
+import Grid from "@mui/material/Grid";
+
 import { useTheme } from "@mui/material/styles";
 
 const UsersSearchComponent = () => {
@@ -251,57 +253,69 @@ const UsersSearchComponent = () => {
           {editMode ? "Editar user" : "Añadir nuevo user"}
         </DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="firstName"
-            label="Nombre"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={newUser.firstName || ""}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="lastName"
-            label="Apellido"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={newUser.lastName || ""}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="email"
-            label="Email"
-            type="email"
-            fullWidth
-            variant="standard"
-            value={newUser.email || ""}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="password"
-            label="Contraseña"
-            type="password"
-            fullWidth
-            variant="standard"
-            value={newUser.password || ""}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="role"
-            label="Rol"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={newUser.role || ""}
-            onChange={handleChange}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="firstName"
+                label="Nombre"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={newUser.firstName || ""}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                margin="dense"
+                name="lastName"
+                label="Apellido"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={newUser.lastName || ""}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                margin="dense"
+                name="email"
+                label="Email"
+                type="email"
+                fullWidth
+                variant="standard"
+                value={newUser.email || ""}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                margin="dense"
+                name="password"
+                label="Contraseña"
+                type="password"
+                fullWidth
+                variant="standard"
+                value={newUser.password || ""}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                margin="dense"
+                name="role"
+                label="Rol"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={newUser.role || ""}
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancelar</Button>

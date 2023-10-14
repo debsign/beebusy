@@ -17,7 +17,7 @@ const AddNewElement = ({ type, projectId, listId, onAdd }) => {
         />
       </Collapse>
       <Collapse in={!open}>
-        <StyledPaper onClick={() => setOpen(true)}>
+        <StyledPaper onClick={() => setOpen(true)} style={{ color: "black" }}>
           {type === "card"
             ? "+ Añade una nueva tarea"
             : "+ Añade una nueva lista"}

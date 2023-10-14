@@ -18,6 +18,8 @@ import moment from "moment";
 import styled from "styled-components";
 import { useTheme } from "@mui/material/styles";
 
+import Grid from "@mui/material/Grid";
+
 // Redux
 import { useDispatch } from "react-redux";
 import { setHasNewNotifications } from "../../features/notificationSlice";
@@ -253,55 +255,65 @@ const BeebusyCard = ({
       >
         <DialogTitle>Editar tarea</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="name"
-            label="Nombre de la tarea"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={newTask.name}
-            onChange={handleChange}
-          />
-          <StyledFormControl fullWidth variant="standard">
-            <InputLabel id="users-label">Usuarios</InputLabel>
-            <Select
-              labelId="users-label"
-              id="users"
-              name="users"
-              multiple
-              value={newTask.users}
-              onChange={handleChange}
-            >
-              {projectUsers.map((user) => (
-                <MenuItem
-                  key={user._id}
-                  value={`${user.firstName} ${user.lastName}`}
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={4}>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="name"
+                label="Nombre de la tarea"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={newTask.name}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={8}>
+              <StyledFormControl fullWidth variant="standard">
+                <InputLabel id="users-label">Usuarios</InputLabel>
+                <Select
+                  labelId="users-label"
+                  id="users"
+                  name="users"
+                  multiple
+                  value={newTask.users}
+                  onChange={handleChange}
                 >
-                  {user.firstName} {user.lastName}
-                </MenuItem>
-              ))}
-            </Select>
-          </StyledFormControl>
-          <TextField
-            margin="dense"
-            name="startDate"
-            label="Fecha de inicio"
-            type="date"
-            fullWidth
-            value={moment(newTask.startDate).format("YYYY-MM-DD")}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="dueDate"
-            label="Fecha de finalización"
-            type="date"
-            fullWidth
-            value={moment(newTask.dueDate).format("YYYY-MM-DD")}
-            onChange={handleChange}
-          />
+                  {projectUsers.map((user) => (
+                    <MenuItem
+                      key={user._id}
+                      value={`${user.firstName} ${user.lastName}`}
+                    >
+                      {user.firstName} {user.lastName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </StyledFormControl>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                margin="dense"
+                name="startDate"
+                label="Fecha de inicio"
+                type="date"
+                fullWidth
+                value={moment(newTask.startDate).format("YYYY-MM-DD")}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                margin="dense"
+                name="dueDate"
+                label="Fecha de finalización"
+                type="date"
+                fullWidth
+                value={moment(newTask.dueDate).format("YYYY-MM-DD")}
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose} color="primary">
@@ -320,7 +332,9 @@ const BeebusyCard = ({
       </Dialog>
 
       <StyledPaper>
-        <p id={taskid}>{content}</p>
+        <p style={{ color: "black", fontWeight: "bold" }} id={taskid}>
+          {content}
+        </p>
         <IconButton onClick={() => handleEditDialogOpen(taskid)}>
           <MoreHorizIcon />
         </IconButton>

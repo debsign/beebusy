@@ -84,7 +84,7 @@ const AddNewElementTitle = ({ type, setOpen, projectId, listId, onAdd }) => {
           <MoreHorizIcon />
         </IconButton>
       </AddNewElementTitleWrapper>
-      {error && <Error>{error}</Error>}
+      {error}
     </StyledNewElementTitleWrapper>
   );
 };

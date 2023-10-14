@@ -36,7 +36,6 @@ const UserSettings = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setUser(data);
         } else {
           console.error("Error al obtener usuarios:", await response.text());

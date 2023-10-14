@@ -13,7 +13,7 @@ function Profile() {
     <>
       {role ? (
         <ContentWrapper bgColor={bgColor} color={color}>
-          <h1>Bienvenido a tu perfil</h1>
+          <h1>Mi perfil</h1>
           <p>Aquí podrás editar tus datos de usuario:</p>
           <UserSettings />
         </ContentWrapper>

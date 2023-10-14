@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledLink = styled(Link)`
-  color: var(--blackjsdarker);
-  text-decoration: underline;
-  transition: all 0.3s;
+  color: var(--yellowjs);
+  text-decoration: none;
+  font-weight: bold;
 
   &:hover {
-    color: var(--yellowjs);
     text-decoration: underline;
+    color: var(--yellowjs);
   }
 `;
 

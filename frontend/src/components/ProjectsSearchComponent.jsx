@@ -23,6 +23,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -279,7 +280,7 @@ const ProjectsSearchComponent = () => {
 
     const listNames = projectData.lists
       ?.map((listId) => {
-        const list = lists.find((l) => l._id === listId);
+        const list = lists.find((l) => l._id === listId._id);
         return list ? list.name : null;
       })
       .filter((listName) => listName !== null);
@@ -373,64 +374,74 @@ const ProjectsSearchComponent = () => {
           {editMode ? "Editar proyecto" : "Añadir nuevo proyecto"}
         </DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="title"
-            label="Título"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={newProject.title || ""}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="description"
-            label="Descripción"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={newProject.description || ""}
-            onChange={handleChange}
-          />
-          <StyledFormControl fullWidth variant="standard">
-            <InputLabel id="lists-label">Listas</InputLabel>
-            <Select
-              labelId="lists-label"
-              id="lists"
-              name="lists"
-              multiple
-              value={newProject.lists || []}
-              onChange={handleChange}
-            >
-              {lists.map((list) => (
-                <MenuItem key={list._id} value={`${list.name}`}>
-                  {list.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </StyledFormControl>
-          <StyledFormControl fullWidth variant="standard">
-            <InputLabel id="users-label">Usuarios</InputLabel>
-            <Select
-              labelId="users-label"
-              id="users"
-              name="users"
-              multiple
-              value={newProject.users || []}
-              onChange={handleChange}
-            >
-              {users.map((user) => (
-                <MenuItem
-                  key={user._id}
-                  value={`${user.firstName} ${user.lastName}`}
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="title"
+                label="Título"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={newProject.title || ""}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <TextField
+                margin="dense"
+                name="description"
+                label="Descripción"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={newProject.description || ""}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <StyledFormControl fullWidth variant="standard">
+                <InputLabel id="lists-label">Listas</InputLabel>
+                <Select
+                  labelId="lists-label"
+                  id="lists"
+                  name="lists"
+                  multiple
+                  value={newProject.lists || []}
+                  onChange={handleChange}
                 >
-                  {user.firstName} {user.lastName}
-                </MenuItem>
-              ))}
-            </Select>
-          </StyledFormControl>
+                  {lists.map((list) => (
+                    <MenuItem key={list._id} value={`${list.name}`}>
+                      {list.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </StyledFormControl>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <StyledFormControl fullWidth variant="standard">
+                <InputLabel id="users-label">Usuarios</InputLabel>
+                <Select
+                  labelId="users-label"
+                  id="users"
+                  name="users"
+                  multiple
+                  value={newProject.users || []}
+                  onChange={handleChange}
+                >
+                  {users.map((user) => (
+                    <MenuItem
+                      key={user._id}
+                      value={`${user.firstName} ${user.lastName}`}
+                    >
+                      {user.firstName} {user.lastName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </StyledFormControl>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancelar</Button>

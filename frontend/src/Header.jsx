@@ -27,8 +27,10 @@ import StyledLink from "./components/style/StyledLink";
 import { useTheme } from "@mui/material/styles";
 
 function Header({ toggleDark, handleModeChange }) {
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const theme = useTheme();
   const bgColor = theme.palette.header.background;
+  const bgColorMenu = theme.palette.background.default;
   const color = theme.palette.header.color;
   // 1. Definición de variables
   const { isAuthenticated, logout } = useAuth();
@@ -65,7 +67,6 @@ function Header({ toggleDark, handleModeChange }) {
   // Para obtener la imagen del avatar
   useEffect(() => {
     const fetchUser = async () => {
-      const BASE_URL = import.meta.env.VITE_BASE_URL;
       const userID = localStorage.getItem("userID");
       const token = localStorage.getItem("token");
 
@@ -95,7 +96,7 @@ function Header({ toggleDark, handleModeChange }) {
     };
 
     fetchUser();
-  }, []);
+  }, [user]);
   // Para verificar que funcionan las notificaciones
   // useEffect(() => {
   //     console.log("Has new notifications:", hasNewNotifications);
@@ -105,13 +106,20 @@ function Header({ toggleDark, handleModeChange }) {
   return (
     <>
       {isMenuOpen && <Overlay onClick={closeMenu} />}
-      <HeaderStyled>
+      <HeaderStyled bgColor={bgColor} color={color}>
         <div>
           <IconButton onClick={toggleMenu}>
             <MenuIcon />
           </IconButton>
-          <Link to="/">
+          <Link
+            to="/"
+            style={{ display: "flex", alignItems: "center", gap: "5px" }}
+          >
             <Logo src={logo} alt="BeeBusy Logo" />
+            <p style={{ color: "black", fontWeight: "bold" }}>
+              <span style={{ fontWeight: "400" }}>Bee</span>
+              busy
+            </p>
           </Link>
         </div>
         <div style={{ marginLeft: "auto" }}>
@@ -128,10 +136,12 @@ function Header({ toggleDark, handleModeChange }) {
         </div>
         {isAuthenticated && (
           <div>
-            <IconButton>
-              <NotificationsNoneIcon style={{ position: "relative" }} />
-              {hasNewNotifications && <RedSpot />}
-            </IconButton>
+            <Tooltip title="Ve a 'mi escritorio' para ver tus alertas">
+              <IconButton>
+                <NotificationsNoneIcon style={{ position: "relative" }} />
+                {hasNewNotifications && <RedSpot />}
+              </IconButton>
+            </Tooltip>
             <IconButton
               id="basic-button"
               aria-controls={open ? "basic-menu" : undefined}
@@ -195,7 +205,11 @@ function Header({ toggleDark, handleModeChange }) {
               <MenuItemStyled
                 bgcolor={bgColor}
                 color={color}
-                onClick={logout}
+                onClick={() => {
+                  logout(); // Cerramos la sesión
+                  navigate("/"); // Navega a la home
+                  handleClose();
+                }}
                 sx={{
                   backgroundColor: bgColor,
                 }}
@@ -209,13 +223,11 @@ function Header({ toggleDark, handleModeChange }) {
           </div>
         )}
       </HeaderStyled>
-      <MenuStyled isOpen={isMenuOpen}>
+      <MenuStyled isOpen={isMenuOpen} bgColor={bgColorMenu} color={color}>
         <Link to="/">
           <Logo src={logo} alt="BeeBusy Logo" />
         </Link>
         <NavStyled>
-          <StyledLink to="/about">Acerca de</StyledLink>
-          <StyledLink to="/contact">Contacto</StyledLink>
           {!isAuthenticated && (
             <>
               <StyledLink to="/login">Iniciar sesión</StyledLink>
@@ -235,6 +247,8 @@ function Header({ toggleDark, handleModeChange }) {
 }
 const HeaderStyled = styled.header`
   && {
+    background-color: ${(props) => props.bgColor};
+    color: ${(props) => props.color};
     position: fixed;
     top: 0;
     width: 100%;
@@ -260,12 +274,13 @@ const MenuItemStyled = styled(MenuItem)`
   }
 `;
 const MenuStyled = styled.div`
+  background-color: ${(props) => props.bgColor};
+  color: ${(props) => props.color};
   box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
     0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
   position: fixed;
   height: 100vh;
   width: 0px;
-  background-color: var(--white);
   overflow: hidden;
   transition: 0.5s ease;
   z-index: 2;

@@ -60,8 +60,15 @@ function AdminDashboard() {
           </Stack>
         </ContentWrapper>
       ) : (
-        <ContentWrapper bgColor={bgColor} color={color}>
-          <p>No tienes permisos para acceder a esta página.</p>
+        <ContentWrapper
+          style={{ paddingTop: "3rem" }}
+          bgColor={bgColor}
+          color={color}
+        >
+          <h2>No tienes permisos para acceder a esta página.</h2>
+          <p>
+            Contacta con un administrador para solicitar un cambio de permisos.
+          </p>
         </ContentWrapper>
       )}
     </>
@@ -74,10 +81,11 @@ const ContentWrapper = styled.section`
     color: ${(props) => props.color};
     width: -webkit-fill-available;
     padding-inline: 1rem;
-    padding-block: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 10rem;
     margin-right: auto;
     margin-left: auto;
-    height: -webkit-fill-available;
+    height: 100%;
   }
 `;
 
