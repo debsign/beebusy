@@ -10,6 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import EditIcon from "@mui/icons-material/Edit";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
@@ -336,7 +337,7 @@ const BeebusyCard = ({
           {content}
         </p>
         <IconButton onClick={() => handleEditDialogOpen(taskid)}>
-          <MoreHorizIcon />
+          <EditIcon />
         </IconButton>
       </StyledPaper>
     </>

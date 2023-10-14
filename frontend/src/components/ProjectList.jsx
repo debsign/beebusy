@@ -130,6 +130,7 @@ const ProjectListWrapper = styled.section`
     margin-right: auto;
     margin-left: auto;
     text-align: center;
+    height: 100vh;
   }
 `;
 const ProjectListContent = styled.div`
