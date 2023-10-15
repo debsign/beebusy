@@ -42,7 +42,7 @@ const ProjectList = () => {
       }
     };
     fetchProjects();
-  }, [BASE_URL, projects]);
+  }, [BASE_URL]);
 
   return (
     <div>

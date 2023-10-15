@@ -37,11 +37,9 @@ function Dashboard() {
         });
 
         if (response.ok) {
-          // console.log("Response:", response);
           const data = await response.json();
-          // console.log("Data:", data);
-
-          // Como queremos las alertas ordenadas de más recientes a menos, utilizamos la función "sort"
+          // Como queremos las alertas ordenadas de más recientes a menos,
+          // utilizamos la función "sort"
           const sortedAlerts = data.alerts.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
           );
@@ -55,7 +53,7 @@ function Dashboard() {
     };
 
     fetchAlerts();
-  }, [userID, alerts]);
+  }, [userID]);
   const deleteAlert = async (alertId) => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -99,7 +97,9 @@ function Dashboard() {
           <h2>Bienvenido a tu dashboard</h2>
           <p>Aquí podrás ver tus alertas:</p>
           <Stack sx={{ width: "100%" }} spacing={2}>
-            {alerts &&
+            {alerts.length === 0 ? (
+              <p>No tienes ninguna notificación, ¡estás al día!</p>
+            ) : (
               alerts.map((alert) => (
                 <div key={alert._id}>
                   <Alert severity="info" onClose={() => deleteAlert(alert._id)}>
@@ -108,7 +108,8 @@ function Dashboard() {
                     <p>{new Date(alert.createdAt).toLocaleString()}</p>
                   </Alert>
                 </div>
-              ))}
+              ))
+            )}
           </Stack>
         </ContentWrapper>
       ) : (

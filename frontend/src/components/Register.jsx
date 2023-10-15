@@ -9,42 +9,53 @@ function Register() {
   const theme = useTheme();
   const bgColor = theme.palette.background.default;
   const color = theme.palette.text.primary;
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-  const handleSubmit = async () => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     let errors = {};
     // Validar si los campos están vacíos
-    if (!firstName) errors.firstName = "El nombre es obligatorio";
-    if (!lastName) errors.lastName = "Los apellidos son obligatorios";
-    if (!email) errors.email = "El email es obligatorio";
-    else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)) {
+    Object.keys(formData).forEach((field) => {
+      if (!formData[field]) errors[field] = `${field} es obligatorio`;
+    });
+    if (
+      !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(formData.email)
+    ) {
       errors.email = "Por favor, introduce un email válido";
     }
-    if (!password) errors.password = "La contraseña es obligatoria";
-    else if (password.length < 8) {
+    if (formData.password.length < 8) {
       errors.password = "La contraseña debe tener al menos 8 caracteres";
     }
-
     setErrors(errors);
-
     if (Object.keys(errors).length > 0) return;
     try {
       const response = await fetch(`${BASE_URL}/api/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, password }),
+        body: JSON.stringify(formData),
       });
       if (response.ok) {
-        setFirstName("");
-        setLastName("");
-        setEmail("");
-        setPassword("");
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+        });
         navigate("/login"); // Redirige al dashboard
       } else {
         setErrors({ general: "Ha fallado el registro" });
@@ -54,48 +65,38 @@ function Register() {
     }
   };
 
+  const fieldNames = {
+    firstName: "Nombre",
+    lastName: "Apellidos",
+    email: "Email",
+    password: "Contraseña",
+  };
+
   return (
     <PageWrapper bgColor={bgColor} color={color}>
       <ContentWrapper>
         <h1>Registro</h1>
-        <FormWrapper>
-          <TextField
-            label="Nombre"
-            variant="outlined"
-            type="text"
-            placeholder="Nombre"
-            onChange={(e) => setFirstName(e.target.value)}
-            error={!!errors.firstName}
-            helperText={errors.firstName}
-          />
-          <TextField
-            label="Apellidos"
-            variant="outlined"
-            type="text"
-            placeholder="Apellidos"
-            onChange={(e) => setLastName(e.target.value)}
-            error={!!errors.lastName}
-            helperText={errors.lastName}
-          />
-          <TextField
-            label="Email"
-            variant="outlined"
-            type="email"
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-            error={!!errors.email}
-            helperText={errors.email}
-          />
-          <TextField
-            label="Contraseña"
-            variant="outlined"
-            type="password"
-            placeholder="Contraseña"
-            onChange={(e) => setPassword(e.target.value)}
-            error={!!errors.password}
-            helperText={errors.password}
-          />
-          <Button variant="contained" onClick={handleSubmit}>
+        <FormWrapper onSubmit={handleSubmit}>
+          {Object.keys(fieldNames).map((field) => (
+            <TextField
+              key={field}
+              label={fieldNames[field]}
+              variant="outlined"
+              type={
+                field === "email"
+                  ? "email"
+                  : field === "password"
+                  ? "password"
+                  : "text"
+              }
+              placeholder={fieldNames[field]}
+              name={field}
+              onChange={handleChange}
+              error={!!errors[field]}
+              helperText={errors[field]}
+            />
+          ))}
+          <Button type="submit" variant="contained">
             Regístrame
           </Button>
         </FormWrapper>
@@ -126,7 +127,7 @@ const ContentWrapper = styled.section`
     max-width: 400px;
   }
 `;
-const FormWrapper = styled.div`
+const FormWrapper = styled.form`
   && {
     display: flex;
     flex-direction: column;

@@ -9,7 +9,6 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import EditIcon from "@mui/icons-material/Edit";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -18,9 +17,7 @@ import FormControl from "@mui/material/FormControl";
 import moment from "moment";
 import styled from "styled-components";
 import { useTheme } from "@mui/material/styles";
-
 import Grid from "@mui/material/Grid";
-
 // Redux
 import { useDispatch } from "react-redux";
 import { setHasNewNotifications } from "../../features/notificationSlice";
@@ -79,7 +76,7 @@ const BeebusyCard = ({
     };
 
     fetchTasks();
-  }, [tasks]);
+  }, []);
   // Info del proyecto
   useEffect(() => {
     const fetchProjectUsers = async () => {
@@ -162,14 +159,11 @@ const BeebusyCard = ({
         body: JSON.stringify({
           message: `${message} (${taskAlert}) en el proyecto "${projectName}"`,
         }),
-        // Aquí se envía el mensaje de la alerta
       });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      console.log("Alerta enviada:", await response.json());
       // Redux
       dispatch(setHasNewNotifications(true));
     } catch (error) {

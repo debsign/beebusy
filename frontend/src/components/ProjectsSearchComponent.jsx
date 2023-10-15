@@ -7,7 +7,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -35,7 +34,7 @@ const ProjectsSearchComponent = () => {
   const [projects, setProjects] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
-  const [newProject, setnewProject] = useState({
+  const [newProject, setNewProject] = useState({
     title: "",
     description: "",
     lists: [],
@@ -188,7 +187,7 @@ const ProjectsSearchComponent = () => {
         })
           .then((response) => response.json())
           .then((data) => setProjects(data));
-        setnewProject({
+        setNewProject({
           title: "",
           description: "",
           lists: [],
@@ -259,7 +258,7 @@ const ProjectsSearchComponent = () => {
   // Dialog para añadir proyecto
   const handleAddDialogOpen = () => {
     setEditMode(false);
-    setnewProject({
+    setNewProject({
       title: "",
       description: "",
       lists: "",
@@ -285,7 +284,7 @@ const ProjectsSearchComponent = () => {
       })
       .filter((listName) => listName !== null);
 
-    setnewProject({
+    setNewProject({
       title: projectData.title,
       description: projectData.description,
       lists: listNames,
@@ -301,7 +300,7 @@ const ProjectsSearchComponent = () => {
   };
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setnewProject((prevProject) => {
+    setNewProject((prevProject) => {
       if (name === "users") {
         // Nos aseguramos que los usuarios sean únicos
         const uniqueUsers = [...new Set(value)];

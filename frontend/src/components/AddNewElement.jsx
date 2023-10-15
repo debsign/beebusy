@@ -1,4 +1,4 @@
-import { Collapse, Fade, Paper } from "@mui/material";
+import { Collapse, Paper } from "@mui/material";
 import { useState } from "react";
 import styled from "styled-components";
 import AddNewElementTitle from "./AddNewElementTitle";

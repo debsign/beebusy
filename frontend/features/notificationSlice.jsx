@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+// Creamos slice
 export const notificationSlice = createSlice({
   name: "notification",
   initialState: {
+    // Iniciamos a falso
     hasNewNotifications: false,
   },
   reducers: {
@@ -13,7 +14,7 @@ export const notificationSlice = createSlice({
 });
 
 export const { setHasNewNotifications } = notificationSlice.actions;
-
+// Devuelve el estado global
 export const selectHasNewNotifications = (state) =>
   state.notification.hasNewNotifications;
 

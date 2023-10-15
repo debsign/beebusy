@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import styled from "styled-components";
 import GlobalStyles from "./GlobalStyles";
 import ProjectList from "./components/ProjectList";
 import BeebusyProject from "./components/BeebusyProject";
 import Header from "./Header";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AddNewElement from "./components/AddNewElement";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { DragDropContext } from "react-beautiful-dnd";
-
-// Importar los componentes de usuario
+// Importamos los componentes de usuario
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
@@ -21,51 +18,50 @@ import { AuthProvider } from "./AuthContext";
 import Footer from "./Footer";
 
 function App() {
-  const [toggleDark, settoggleDark] = useState(false);
-
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const myTheme = createTheme({
     palette: {
-      type: toggleDark ? "dark" : "light",
+      type: isDarkMode ? "dark" : "light",
       background: {
-        default: toggleDark ? "#333" : "#fff",
+        default: isDarkMode ? "#333" : "#fff",
       },
       text: {
-        default: toggleDark ? "#fff" : "#000",
-        primary: toggleDark ? "#fff" : "#000",
-        secondary: toggleDark
+        default: isDarkMode ? "#fff" : "#000",
+        primary: isDarkMode ? "#fff" : "#000",
+        secondary: isDarkMode
           ? "rgba(255, 255, 255, 0.54)"
           : "rgba(0, 0, 0, 0.54)",
       },
       header: {
-        background: toggleDark ? "#FFD700" : "#f9f9f9",
-        color: toggleDark ? "#fff" : "#000",
+        background: isDarkMode ? "#FFD700" : "#f9f9f9",
+        color: isDarkMode ? "#fff" : "#000",
       },
       footer: {
-        background: toggleDark ? "#FFD700" : "#F0DB4F",
-        color: toggleDark ? "#000" : "#000",
+        background: isDarkMode ? "#FFD700" : "#F0DB4F",
+        color: isDarkMode ? "#000" : "#000",
       },
       dialog: {
-        background: toggleDark ? "#333" : "#FFD700",
+        background: isDarkMode ? "#333" : "#FFD700",
       },
       // Botones
       primary: {
-        main: toggleDark ? "#fff" : "#000",
+        main: isDarkMode ? "#fff" : "#000",
       },
       secondary: {
-        main: toggleDark ? "#FFD700" : "#FFD700",
+        main: isDarkMode ? "#FFD700" : "#FFD700",
       },
     },
   });
   const handleModeChange = () => {
-    settoggleDark(!toggleDark);
+    setIsDarkMode(!isDarkMode);
   };
 
   return (
     <AuthProvider>
       <ThemeProvider theme={myTheme}>
+        <GlobalStyles />
         <BrowserRouter>
-          <Header toggleDark={toggleDark} handleModeChange={handleModeChange} />
-          <GlobalStyles />
+          <Header isDarkMode={isDarkMode} handleModeChange={handleModeChange} />
           <OuterContainer>
             <DragDropContext>
               <AppContent />
@@ -100,22 +96,8 @@ function AppContent() {
 
 const OuterContainer = styled.div`
   height: 100vh;
-  /* padding-bottom: 100px; */
-  /* overflow: hidden; */
   display: flex;
   flex-direction: column;
-`;
-const MainStyled = styled.main`
-  flex-grow: 1;
-  padding-inline: 1rem;
-  padding-block: 5rem;
-  overflow-y: auto;
-  overflow-x: auto;
-  white-space: nowrap;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 300px);
-  grid-gap: 20px;
-  grid-auto-flow: column;
 `;
 
 export default App;

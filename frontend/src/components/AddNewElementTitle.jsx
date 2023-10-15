@@ -8,25 +8,18 @@ const AddNewElementTitle = ({ type, setOpen, projectId, listId, onAdd }) => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // Url para fetch
   const BASE_URL = import.meta.env.VITE_BASE_URL;
-  // Token para identificación
   const token = localStorage.getItem("token");
-
   const body =
     type === "card" ? { name, projectId, listId } : { name, projectId };
 
   const handleAdd = async () => {
-    // console.log('Inicio de handleAdd, type:', type, 'name:', name, 'proyectoid:', projectId, 'listId:', listId);
     if (!name) return;
     setLoading(true);
     setError(null);
-
+    // Dependiendo del elemento que sea, pasamos una url u otra
     const url =
       type === "card" ? `${BASE_URL}/api/tasks/` : `${BASE_URL}/api/lists/`;
-
-    // console.log('URL:', url, 'Body:', JSON.stringify(body));
 
     try {
       const response = await fetch(url, {
@@ -84,7 +77,7 @@ const AddNewElementTitle = ({ type, setOpen, projectId, listId, onAdd }) => {
           <MoreHorizIcon />
         </IconButton>
       </AddNewElementTitleWrapper>
-      {error}
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </StyledNewElementTitleWrapper>
   );
 };
@@ -117,9 +110,5 @@ const AddNewElementTitleWrapper = styled.div`
   justify-content: space-between;
   margin-top: 1rem;
   width: 100%;
-`;
-const Error = styled.p`
-  color: red;
-  font-size: 0.8rem;
 `;
 export default AddNewElementTitle;

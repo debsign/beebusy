@@ -5,7 +5,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,7 +28,7 @@ const UsersSearchComponent = () => {
   const [users, setUsers] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
-  const [newUser, setnewUser] = useState({
+  const [newUser, setNewUser] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -113,7 +112,7 @@ const UsersSearchComponent = () => {
         })
           .then((response) => response.json())
           .then((data) => setUsers(data));
-        setnewUser({
+        setNewUser({
           firstName: "",
           lastName: "",
           email: "",
@@ -175,7 +174,7 @@ const UsersSearchComponent = () => {
   // Dialog para añadir user
   const handleAddDialogOpen = () => {
     setEditMode(false);
-    setnewUser({
+    setNewUser({
       firstName: "",
       lastName: "",
       email: "",
@@ -188,7 +187,7 @@ const UsersSearchComponent = () => {
   const handleEditDialogOpen = (userId, userData) => {
     setEditMode(true);
     setCurrentUserId(userId);
-    setnewUser({
+    setNewUser({
       firstName: userData.firstName,
       lastName: userData.lastName,
       email: userData.email,
@@ -205,7 +204,7 @@ const UsersSearchComponent = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    setnewUser((prevUser) => ({
+    setNewUser((prevUser) => ({
       ...prevUser,
       [name]: value,
     }));

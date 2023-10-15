@@ -36,7 +36,7 @@ function AdminDashboard() {
                   variant="scrollable"
                   scrollButtons
                   allowScrollButtonsMobile
-                  aria-label="scrollable force tabs example"
+                  aria-label="Tab navigation para el dashboard del admin"
                 >
                   <Tab label="Usuarios" value="1" />
                   <Tab label="Proyectos" value="2" />

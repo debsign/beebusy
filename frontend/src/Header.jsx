@@ -1,30 +1,32 @@
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { IconButton, Switch } from "@mui/material";
+import {
+  IconButton,
+  Switch,
+  Tooltip,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  Avatar,
+  useTheme,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LoginIcon from "@mui/icons-material/Login";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Tooltip from "@mui/material/Tooltip";
-import { useEffect, useState } from "react";
-import { Menu, MenuItem } from "@mui/material";
-import { Link } from "react-router-dom";
 import Settings from "@mui/icons-material/Settings";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import Logout from "@mui/icons-material/Logout";
-import Avatar from "@mui/material/Avatar";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+// Assets
+import logo from "./assets/images/bee.png";
 import avatarWoman from "./assets/images/avatar-woman.svg";
 import avatarMan from "./assets/images/avatar-man.svg";
-
 // Redux
 import { useSelector } from "react-redux";
 import { selectHasNewNotifications } from "../features/notificationSlice";
-
-import logo from "./assets/images/bee.png";
-
 import { useAuth } from "./AuthContext";
 import StyledLink from "./components/style/StyledLink";
-import { useTheme } from "@mui/material/styles";
 
 function Header({ toggleDark, handleModeChange }) {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -32,7 +34,6 @@ function Header({ toggleDark, handleModeChange }) {
   const bgColor = theme.palette.header.background;
   const bgColorMenu = theme.palette.background.default;
   const color = theme.palette.header.color;
-  // 1. Definición de variables
   const { isAuthenticated, logout } = useAuth();
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -41,7 +42,6 @@ function Header({ toggleDark, handleModeChange }) {
   const [user, setUser] = useState(null);
   // Para controlar las notificaciones
   const hasNewNotifications = useSelector(selectHasNewNotifications);
-  // 2. Funciones
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
@@ -69,16 +69,13 @@ function Header({ toggleDark, handleModeChange }) {
     const fetchUser = async () => {
       const userID = localStorage.getItem("userID");
       const token = localStorage.getItem("token");
-
       if (!userID || !token) return;
-
       try {
         const response = await fetch(`${BASE_URL}/api/user/${userID}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
         if (response.ok) {
           const contentType = response.headers.get("content-type");
           if (contentType && contentType.indexOf("application/json") !== -1) {
@@ -94,15 +91,8 @@ function Header({ toggleDark, handleModeChange }) {
         console.error("Error en fetch:", error);
       }
     };
-
     fetchUser();
   }, [user]);
-  // Para verificar que funcionan las notificaciones
-  // useEffect(() => {
-  //     console.log("Has new notifications:", hasNewNotifications);
-  // }, [hasNewNotifications]);
-
-  // 3. Resultado
   return (
     <>
       {isMenuOpen && <Overlay onClick={closeMenu} />}

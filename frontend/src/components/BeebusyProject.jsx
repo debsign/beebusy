@@ -1,9 +1,8 @@
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import BeebusyList from "./BeebusyList";
 import AddNewElement from "./AddNewElement";
 import styled from "styled-components";
-import { useState } from "react";
-import { useEffect } from "react";
 
 const BeebusyProject = () => {
   const { projectId } = useParams();
@@ -41,7 +40,7 @@ const BeebusyProject = () => {
     };
     fetchProject();
   }, [BASE_URL, projectId]);
-
+  // Añadimos lista
   const handleAddList = async (newList) => {
     const token = localStorage.getItem("token");
     if (!token) {

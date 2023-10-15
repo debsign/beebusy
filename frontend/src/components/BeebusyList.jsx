@@ -85,49 +85,58 @@ const BeebusyList = ({ projectName }) => {
     fetchTasksTitles();
   }, [BASE_URL, lists, projectId]);
   // Actualiza las tareas
-  const updateTaskList = (taskId, newListId) => {
+  const updateTaskList = async (taskId, newListId) => {
     const token = localStorage.getItem("token");
     if (!token) {
       console.error("Token no encontrado");
       return;
     }
-    fetch(`${BASE_URL}/api/task/${taskId}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        lists: newListId, // ID de la nueva lista
-      }),
-    })
-      .then(() => {
-        // Recargar los tasks después de actualizar uno
-        fetch(`${BASE_URL}/api/tasks`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const projectTasks = data.filter(
-              (task) => task.projects?.[0]?._id === projectId
-            );
 
-            const tasksByList = lists.reduce((acc, list) => {
-              acc[list._id] = projectTasks.filter(
-                (task) => task.lists[0]._id === list._id
-              );
-              return acc;
-            }, {});
-
-            setTasks(tasksByList);
-          });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+    try {
+      const response = await fetch(`${BASE_URL}/api/task/${taskId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          lists: newListId, // ID de la nueva lista
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      // Recargar los tasks después de actualizar uno
+      const tasksResponse = await fetch(`${BASE_URL}/api/tasks`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!tasksResponse.ok) {
+        throw new Error(await tasksResponse.text());
+      }
+
+      const data = await tasksResponse.json();
+      const projectTasks = data.filter(
+        (task) => task.projects?.[0]?._id === projectId
+      );
+
+      const tasksByList = lists.reduce((acc, list) => {
+        acc[list._id] = projectTasks.filter(
+          (task) => task.lists[0]._id === list._id
+        );
+        return acc;
+      }, {});
+
+      setTasks(tasksByList);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
+
   // Configuramos onDragEnd
   const onDragEnd = (result) => {
     // Propiedades que nos ofrece el objeto result

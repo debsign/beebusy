@@ -5,7 +5,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -27,7 +26,7 @@ const ListsSearchComponent = () => {
   const [lists, setLists] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
-  const [newList, setnewList] = useState({
+  const [newList, setNewList] = useState({
     name: "",
   });
   const [editMode, setEditMode] = useState(false);
@@ -106,7 +105,7 @@ const ListsSearchComponent = () => {
         })
           .then((response) => response.json())
           .then((data) => setLists(data));
-        setnewList({
+        setNewList({
           name: "",
         });
       })
@@ -164,7 +163,7 @@ const ListsSearchComponent = () => {
   // Dialog para añadir una lista
   const handleAddDialogOpen = () => {
     setEditMode(false);
-    setnewList({
+    setNewList({
       name: "",
     });
     setOpenDialog(true);
@@ -173,7 +172,7 @@ const ListsSearchComponent = () => {
   const handleEditDialogOpen = (listId, listData) => {
     setEditMode(true);
     setCurrentListId(listId);
-    setnewList({
+    setNewList({
       name: listData.name,
     });
     setOpenDialog(true);
@@ -186,7 +185,7 @@ const ListsSearchComponent = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    setnewList((prevList) => ({
+    setNewList((prevList) => ({
       ...prevList,
       [name]: value,
     }));

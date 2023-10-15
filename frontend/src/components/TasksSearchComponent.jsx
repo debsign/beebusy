@@ -7,7 +7,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -41,7 +40,7 @@ const TasksSearchComponent = () => {
   const [tasks, setTasks] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
-  const [newTask, setnewTask] = useState({
+  const [newTask, setNewTask] = useState({
     name: "",
     startDate: "",
     dueDate: "",
@@ -227,7 +226,7 @@ const TasksSearchComponent = () => {
         })
           .then((response) => response.json())
           .then((data) => setTasks(data));
-        setnewTask({
+        setNewTask({
           name: "",
           startDate: "",
           dueDate: "",
@@ -290,7 +289,7 @@ const TasksSearchComponent = () => {
   const handleAddDialogOpen = () => {
     // console.log('Valor actual de newTask.projects:', newTask.projects);
     setEditMode(false);
-    setnewTask({
+    setNewTask({
       name: "",
       startDate: "",
       dueDate: "",
@@ -323,7 +322,7 @@ const TasksSearchComponent = () => {
       })
       .filter((listName) => listName !== null);
 
-    setnewTask({
+    setNewTask({
       name: taskData.name,
       startDate: taskData.startDate,
       dueDate: taskData.dueDate,
@@ -341,7 +340,7 @@ const TasksSearchComponent = () => {
   // Cambiar la tarea
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setnewTask((prevTask) => {
+    setNewTask((prevTask) => {
       const updatedTask = { ...prevTask, [name]: value };
       // console.log("newTask updated:", updatedTask);
       return updatedTask;

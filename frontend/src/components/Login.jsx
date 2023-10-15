@@ -17,22 +17,18 @@ function Login() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     let errors = {};
-
     if (!email) errors.email = "El email es obligatorio";
     else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)) {
       errors.email = "Por favor, introduce un email válido";
     }
-
     if (!password) errors.password = "La contraseña es obligatoria";
-
     setErrors(errors);
-
     if (Object.keys(errors).length > 0) return;
-
     try {
-      const response = await fetch("http://localhost:5001/api/login", {
+      const response = await fetch(`${BASE_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -43,13 +39,11 @@ function Login() {
         setErrors({ general: data.message });
         return;
       }
-
       const data = await response.json();
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
       localStorage.setItem("userID", data.userID);
       login();
-
       if (data.role === "admin") {
         setEmail("");
         setPassword("");
@@ -68,7 +62,7 @@ function Login() {
     <PageWrapper bgColor={bgColor} color={color}>
       <ContentWrapper>
         <h1>Iniciar sesión</h1>
-        <FormWrapper>
+        <FormWrapper onSubmit={handleSubmit}>
           <TextField
             label="Email"
             variant="outlined"
@@ -87,7 +81,7 @@ function Login() {
             error={!!errors.password}
             helperText={errors.password}
           />
-          <Button variant="contained" onClick={handleSubmit}>
+          <Button type="submit" variant="contained">
             Inicia sesión
           </Button>
           {errors.general && <p style={{ color: "red" }}>{errors.general}</p>}
@@ -116,7 +110,7 @@ const ContentWrapper = styled.section`
     max-width: 400px;
   }
 `;
-const FormWrapper = styled.div`
+const FormWrapper = styled.form`
   && {
     display: flex;
     flex-direction: column;
