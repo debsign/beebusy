@@ -35,6 +35,7 @@ const BeebusyCard = ({
   const [tasks, setTasks] = useState([]);
   const [initialTask, setInitialTask] = useState({
     name: "",
+    description: "",
     startDate: "",
     dueDate: "",
     users: [],
@@ -76,7 +77,7 @@ const BeebusyCard = ({
     };
 
     fetchTasks();
-  }, []);
+  }, [tasks]);
   // Info del proyecto
   useEffect(() => {
     const fetchProjectUsers = async () => {
@@ -118,6 +119,7 @@ const BeebusyCard = ({
 
     const task = {
       name: taskData.name,
+      description: taskData.description || "",
       startDate: taskData.startDate,
       dueDate: taskData.dueDate,
       users: taskData.users.map((user) => `${user.firstName} ${user.lastName}`),
@@ -180,6 +182,7 @@ const BeebusyCard = ({
     // Prepara la tarea actualizada
     const taskToUpdate = {
       name: updatedTask.name,
+      description: updatedTask.description,
       startDate: updatedTask.startDate,
       dueDate: updatedTask.dueDate,
       users: userIds.map((id) => ({ _id: id })),
@@ -285,6 +288,21 @@ const BeebusyCard = ({
                   ))}
                 </Select>
               </StyledFormControl>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="description"
+                label="Descripción de la tarea"
+                type="text"
+                fullWidth
+                variant="standard"
+                multiline
+                value={newTask.description}
+                onChange={handleChange}
+                rows={4}
+              />
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
               <TextField

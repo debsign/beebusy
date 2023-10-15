@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 // Las listas, usuarios y proyectos están asociados a los modelos List, User y Project
 const TaskSchema = new mongoose.Schema({
   name: String,
+  description: String,
   startDate: Date,
   dueDate: Date,
   users: [
