@@ -1,16 +1,17 @@
+// Importamos el modelo
 const List = require("../models/List");
-const jwt = require("jsonwebtoken");
-
 // GET lists
+// Obtiene todos las listas desde la base de datos
 exports.getAllLists = async (req, res) => {
   try {
-    const lists = await List.find(); // Obtiene todos las listas desde la base de datos
+    const lists = await List.find();
     res.status(200).json(lists);
   } catch (error) {
     res.status(400).json({ message: "Error al obtener las listas", error });
   }
 };
 // POST list
+// Añade una lista
 exports.addList = async (req, res) => {
   try {
     const newList = new List(req.body);
@@ -21,12 +22,13 @@ exports.addList = async (req, res) => {
   }
 };
 // UPDATE list
+// Actualiza una lista
 exports.updateList = async (req, res) => {
   try {
     const listId = req.params.id;
     // Encuentra la lista por ID y actualiza con los datos enviados en el cuerpo del request
     const list = await List.findByIdAndUpdate(listId, req.body, {
-      new: true, // Esto retornará el documento modificado y no el original
+      new: true, // Devuelve el documento modificado
       runValidators: true, // Valida el nuevo documento antes de guardarlo
     });
     if (!list) {
@@ -39,10 +41,12 @@ exports.updateList = async (req, res) => {
 };
 
 // DELETE list
+// Borra una lista
 exports.deleteList = async (req, res) => {
   try {
     const listId = req.params.id;
-    const list = await List.findByIdAndRemove(listId); // Encuentra la lista por ID y la elimina
+    // Encuentra la lista por ID y la elimina
+    const list = await List.findByIdAndRemove(listId);
     if (!list) {
       return res.status(404).json({ message: "Lista no encontrada" });
     }

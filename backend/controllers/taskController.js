@@ -1,7 +1,7 @@
+// Importamos el modelo
 const Task = require("../models/Task");
-const jwt = require("jsonwebtoken");
-
 // GET tasks
+// Obtiene todos las tareas desde la base de datos
 exports.getAllTasks = async (req, res) => {
   try {
     const tasks = await Task.find()
@@ -10,17 +10,16 @@ exports.getAllTasks = async (req, res) => {
       .populate("lists"); // Poblar información de listas
 
     if (!tasks || tasks.length === 0) {
-      return res.status(404).json({ message: "No se encontraron tareas" });
+      return res.status(404).json({ message: "No se encontraron las tareas" });
     }
-
     res.status(200).json(tasks);
   } catch (error) {
-    console.error("Error al obtener tareas:", error); // Log detallado del error
+    console.error("Error al obtener tareas:", error);
     res.status(500).json({ message: "Error interno del servidor", error });
   }
 };
-
 // POST tasks
+// Añade una tarea
 exports.addTask = async (req, res) => {
   try {
     // Para la creación de tareas en el tablero del proyecto
@@ -39,36 +38,35 @@ exports.addTask = async (req, res) => {
   }
 };
 // UPDATE tasks
+// Actualiza una tarea
 exports.updateTask = async (req, res) => {
   try {
     const taskId = req.params.id;
     // Encuentra la tarea por ID y actualiza con los datos enviados en el cuerpo del request
     const task = await Task.findByIdAndUpdate(taskId, req.body, {
-      new: true, // Esto retornará el documento modificado y no el original
+      new: true, // Devuelve el documento modificado y no el original
       runValidators: true, // Valida el nuevo documento antes de guardarlo
     });
-
     if (!task) {
       return res.status(404).json({ message: "Tarea no encontrada" });
     }
-
     res.status(200).json({ message: "Tarea actualizada", task });
   } catch (error) {
-    res.status(400).json({ message: "Error al actualizar tarea", error });
+    res.status(400).json({ message: "Error al actualizar la tarea", error });
   }
 };
-
 // DELETE tasks
+// Borra una tarea
 exports.deleteTask = async (req, res) => {
   try {
     const taskId = req.params.id;
-    const task = await Task.findByIdAndRemove(taskId); // Encuentra el usuario por ID y lo elimina
-
+    // Encuentra el usuario por ID y lo elimina
+    const task = await Task.findByIdAndRemove(taskId);
     if (!task) {
       return res.status(404).json({ message: "Tarea no encontrada" });
     }
     res.status(200).json({ message: "Tarea eliminada" });
   } catch (error) {
-    res.status(400).json({ message: "Error al eliminar tarea", error });
+    res.status(400).json({ message: "Error al eliminar la tarea", error });
   }
 };

@@ -1,7 +1,7 @@
+// Importamos el modelo
 const Project = require("../models/Project");
-const jwt = require("jsonwebtoken");
-
 // GET projects
+// Obtiene todos los proyectos desde la base de datos
 exports.getAllProjects = async (req, res) => {
   try {
     const projects = await Project.find()
@@ -13,7 +13,8 @@ exports.getAllProjects = async (req, res) => {
     res.status(400).json({ message: "Error al obtener los proyectos", error });
   }
 };
-// GET un proyecto específico
+// GET proyecto
+// Obtiene un proyecto específico
 exports.getProjectById = async (req, res) => {
   try {
     const projectId = req.params.id; // Obtener el ID del proyecto de los parámetros de la ruta
@@ -21,17 +22,17 @@ exports.getProjectById = async (req, res) => {
       .populate("users", "firstName lastName") // Obtener nombre y apellido
       .populate("lists", "name") // Obtener el nombre de las listas
       .exec();
-
     if (!project) {
-      return res.status(404).json({ message: "Proyecto no encontrado" }); // Enviar un error si el proyecto no se encuentra
+      return res.status(404).json({ message: "Proyecto no encontrado" });
     }
 
-    res.status(200).json(project); // Enviar el proyecto como respuesta
+    res.status(200).json(project);
   } catch (error) {
     res.status(400).json({ message: "Error al obtener el proyecto", error });
   }
 };
 // POST proyecto
+// Añade un proyecto
 exports.addProject = async (req, res) => {
   try {
     console.log(req.body);
@@ -40,32 +41,31 @@ exports.addProject = async (req, res) => {
     console.log("Proyecto a guardar:", newProject);
     res.status(201).json(newProject);
   } catch (error) {
-    res.status(400).json({ message: "Error al crear un proyecto", error });
+    res.status(400).json({ message: "Error al crear el proyecto", error });
   }
 };
+// POST list to project
 // Añade listas al proyecto
 exports.addListToProject = async (req, res) => {
-  console.log("entra");
   try {
-    const { projectId, listId } = req.body; // Aquí, asegúrate de que projectId y listId se están recibiendo correctamente
-    console.log("Project ID:", projectId, "List ID:", listId);
+    const { projectId, listId } = req.body;
     const project = await Project.findById(projectId);
-    console.log("Project:", project); // Verifica si el proyecto se recupera correctamente
     if (!project) {
       return res.status(404).json({ message: "Proyecto no encontrado" });
     }
+    // Añade la lista a las listas del proyecto
     project.lists.push(listId);
     await project.save();
     res.status(200).json({ message: "Lista añadida al proyecto", project });
   } catch (error) {
-    console.error("Error:", error); // Imprime el error para entender qué está mal
+    console.error("Error:", error);
     res
       .status(400)
       .json({ message: "Error al añadir la lista al proyecto", error });
   }
 };
-
 // UPDATE proyecto
+// Actualiza un proyecto
 exports.updateProject = async (req, res) => {
   try {
     const projectId = req.params.id;
@@ -82,21 +82,22 @@ exports.updateProject = async (req, res) => {
     console.log("Proyecto a guardar:", project);
     res.status(200).json({ message: "Proyecto actualizado", project });
   } catch (error) {
-    res.status(400).json({ message: "Error al actualizar proyecto", error });
+    res.status(400).json({ message: "Error al actualizar el proyecto", error });
   }
 };
-
 // DELETE proyecto
+// Borrar un proyecto
 exports.deleteProject = async (req, res) => {
   try {
     const projectId = req.params.id;
-    const project = await Project.findByIdAndRemove(projectId); // Encuentra el proyecto por ID y lo elimina
+    // Encuentra el proyecto por ID y lo elimina
+    const project = await Project.findByIdAndRemove(projectId);
 
     if (!project) {
       return res.status(404).json({ message: "Proyecto no encontrado" });
     }
     res.status(200).json({ message: "Proyecto eliminado" });
   } catch (error) {
-    res.status(400).json({ message: "Error al eliminar proyecto", error });
+    res.status(400).json({ message: "Error al eliminar el proyecto", error });
   }
 };
