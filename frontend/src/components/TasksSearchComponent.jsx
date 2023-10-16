@@ -201,7 +201,7 @@ const TasksSearchComponent = () => {
       console.error("Token no encontrado");
       return;
     }
-    fetch(`${BASE_URL}/api/tasks`, {
+    fetch(`${BASE_URL}/api/admin/tasks`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -216,6 +216,7 @@ const TasksSearchComponent = () => {
         return response.json();
       })
       .then((data) => {
+        console.log("data", data);
         // Recargar los tasks después de añadir uno nuevo
         const token = localStorage.getItem("token");
         fetch(`${BASE_URL}/api/tasks`, {
@@ -425,7 +426,7 @@ const TasksSearchComponent = () => {
         .filter((listId) => listId !== null),
     };
 
-    // console.log('taskWithUserIds', taskWithUserIds);
+    console.log("taskWithUserIds", taskWithUserIds);
 
     if (editMode) {
       updateTask(currentTaskId, taskWithUserIds);

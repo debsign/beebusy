@@ -82,10 +82,9 @@ const ContentWrapper = styled.section`
     width: -webkit-fill-available;
     padding-inline: 1rem;
     padding-top: 2rem;
-    padding-bottom: 10rem;
+    padding-bottom: 16rem;
     margin-right: auto;
     margin-left: auto;
-    height: 100%;
   }
 `;
 

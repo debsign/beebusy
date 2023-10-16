@@ -38,6 +38,7 @@ const AddNewElementTitle = ({ type, setOpen, projectId, listId, onAdd }) => {
         if (type === "list") {
           onAdd(data); // Llama a onAdd con la nueva lista creada
         }
+        window.location.reload();
       } else {
         throw new Error("Failed to add new element");
       }

@@ -92,7 +92,7 @@ function Header({ toggleDark, handleModeChange }) {
       }
     };
     fetchUser();
-  }, [user]);
+  }, []);
   return (
     <>
       {isMenuOpen && <Overlay onClick={closeMenu} />}

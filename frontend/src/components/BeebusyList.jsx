@@ -44,7 +44,7 @@ const BeebusyList = ({ projectName }) => {
       }
     };
     fetchListTitles();
-  }, [BASE_URL, projectId, lists]);
+  }, [BASE_URL, projectId]); // lists
   // Obtenemos las tareas
   useEffect(() => {
     const fetchTasksTitles = async () => {

@@ -18,6 +18,10 @@ import moment from "moment";
 import styled from "styled-components";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
+import Checkbox from "@mui/material/Checkbox";
+import ListItemText from "@mui/material/ListItemText";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 // Redux
 import { useDispatch } from "react-redux";
 import { setHasNewNotifications } from "../../features/notificationSlice";
@@ -77,7 +81,7 @@ const BeebusyCard = ({
     };
 
     fetchTasks();
-  }, [tasks]);
+  }, []); // tasks
   // Info del proyecto
   useEffect(() => {
     const fetchProjectUsers = async () => {
@@ -226,7 +230,7 @@ const BeebusyCard = ({
           );
         });
 
-        // Aquí, actualiza initialTask y newTask con los datos más recientes
+        // Actualiza initialTask y newTask con los datos más recientes
         const taskData = tasks.find((task) => task._id === taskid);
         if (taskData) {
           const updatedUsers = taskData.users.map(
@@ -267,28 +271,6 @@ const BeebusyCard = ({
                 onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={12} sm={12} md={8}>
-              <StyledFormControl fullWidth variant="standard">
-                <InputLabel id="users-label">Usuarios</InputLabel>
-                <Select
-                  labelId="users-label"
-                  id="users"
-                  name="users"
-                  multiple
-                  value={newTask.users}
-                  onChange={handleChange}
-                >
-                  {projectUsers.map((user) => (
-                    <MenuItem
-                      key={user._id}
-                      value={`${user.firstName} ${user.lastName}`}
-                    >
-                      {user.firstName} {user.lastName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </StyledFormControl>
-            </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <TextField
                 autoFocus
@@ -303,6 +285,45 @@ const BeebusyCard = ({
                 onChange={handleChange}
                 rows={4}
               />
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <StyledFormControl fullWidth variant="standard">
+                <InputLabel id="users-label">Usuarios</InputLabel>
+                <Select
+                  labelId="users-label"
+                  id="users"
+                  name="users"
+                  multiple
+                  value={newTask.users}
+                  onChange={handleChange}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                >
+                  {projectUsers.map((user) => (
+                    <MenuItem
+                      key={user._id}
+                      value={`${user.firstName} ${user.lastName}`}
+                    >
+                      <Checkbox
+                        checked={
+                          newTask.users.indexOf(
+                            `${user.firstName} ${user.lastName}`
+                          ) > -1
+                        }
+                      />
+                      <ListItemText
+                        primary={`${user.firstName} ${user.lastName}`}
+                      />
+                      {/* {user.firstName} {user.lastName} */}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </StyledFormControl>
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
               <TextField
@@ -336,6 +357,7 @@ const BeebusyCard = ({
             onClick={() => {
               saveTask(newTask);
               handleDialogClose();
+              window.location.reload();
             }}
             color="primary"
           >

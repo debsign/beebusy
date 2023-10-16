@@ -18,12 +18,10 @@ exports.getAllTasks = async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor", error });
   }
 };
-// POST tasks
-// Añade una tarea
+// POST tasks ADMIN
+// Añade una tarea en el admin
 exports.addTask = async (req, res) => {
   try {
-    // Para la creación de tareas en el tablero del proyecto
-    // necesitamos asignarle el id de la lista y el del proyecto
     const { name, listId, projectId } = req.body;
     const taskData = {
       name: name,
@@ -34,6 +32,30 @@ exports.addTask = async (req, res) => {
     await newTask.save();
     res.status(201).json(newTask);
   } catch (error) {
+    console.error("Error al guardar en la BD:", error);
+    res.status(400).json({ message: "Error al añadir la tarea", error });
+  }
+};
+// POST tasks TABLERO
+// Añade una tarea en el tablero
+exports.addTaskAdmin = async (req, res) => {
+  try {
+    // Para la creación de tareas en el tablero del proyecto
+    // necesitamos asignarle el id de la lista y el del proyecto
+    const { name, lists, projects, users, startDate, dueDate } = req.body;
+    const taskData = {
+      name: name,
+      lists: lists ? lists : undefined,
+      projects: projects ? [projects] : undefined,
+      users: users ? users : undefined,
+      startDate: startDate ? startDate : undefined,
+      dueDate: dueDate ? dueDate : undefined,
+    };
+    const newTask = new Task(taskData);
+    await newTask.save();
+    res.status(201).json(newTask);
+  } catch (error) {
+    console.error("Error al guardar en la BD:", error);
     res.status(400).json({ message: "Error al añadir la tarea", error });
   }
 };
