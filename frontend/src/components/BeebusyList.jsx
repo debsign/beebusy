@@ -220,6 +220,13 @@ const BeebusyList = ({ projectName }) => {
               type="card"
               projectId={projectId}
               listId={list._id}
+              // Pasamos la actualización
+              onAddTask={(newTask) => {
+                setTasks((prev) => {
+                  const updatedTasks = [...prev[list._id], newTask];
+                  return { ...prev, [list._id]: updatedTasks };
+                });
+              }}
             />
           </StyledPaper>
         ))}

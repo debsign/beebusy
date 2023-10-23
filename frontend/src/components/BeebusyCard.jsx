@@ -117,20 +117,68 @@ const BeebusyCard = ({
       fetchProjectUsers();
     }
   }, [openDialog]);
-  const handleEditDialogOpen = (taskId) => {
+  const handleEditDialogOpen = async (taskId) => {
     const taskData = tasks.find((task) => task._id === taskId);
     if (!taskData) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token no encontrado");
+      return;
+    }
+    // console.log("taskData.users:", taskData.users);
+    // Recuperamos los objetos de usuario completos usando los IDs
+    const users = await Promise.all(
+      taskData.users.map(async (userObj) => {
+        let userId;
+
+        // Verificar si userObj es un objeto y tiene una propiedad _id
+        if (userObj && typeof userObj === "object" && userObj._id) {
+          userId = userObj._id;
+        } else if (typeof userObj === "string") {
+          // Verificar si userObj es una cadena, lo que significa que es un ID de usuario
+          userId = userObj;
+        } else {
+          console.error("Formato de userObj no reconocido:", userObj);
+          return null;
+        }
+
+        // console.log("userId:", userId);
+
+        if (!userId) {
+          console.error("UserId is undefined for userObj:", userObj);
+          return null;
+        }
+
+        const response = await fetch(`${BASE_URL}/api/user/${userId}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) throw new Error("Error fetching user");
+        return await response.json();
+      })
+    );
+
+    // console.log("users:", users);
 
     const task = {
       name: taskData.name,
       description: taskData.description || "",
       startDate: taskData.startDate,
       dueDate: taskData.dueDate,
-      users: taskData.users.map((user) => `${user.firstName} ${user.lastName}`),
+      // users: taskData.users.map((user) => `${user.firstName} ${user.lastName}`),
+      users: users.map((user) =>
+        user ? `${user.firstName} ${user.lastName}` : null
+      ),
     };
 
     setInitialTask(task);
     setNewTask(task);
+    // console.log("task:", task);
     setOpenDialog(true);
   };
   const handleDialogClose = () => {
@@ -319,7 +367,6 @@ const BeebusyCard = ({
                       <ListItemText
                         primary={`${user.firstName} ${user.lastName}`}
                       />
-                      {/* {user.firstName} {user.lastName} */}
                     </MenuItem>
                   ))}
                 </Select>
@@ -357,7 +404,7 @@ const BeebusyCard = ({
             onClick={() => {
               saveTask(newTask);
               handleDialogClose();
-              window.location.reload();
+              // window.location.reload();
             }}
             color="primary"
           >

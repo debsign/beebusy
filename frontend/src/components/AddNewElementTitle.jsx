@@ -4,7 +4,14 @@ import styled from "styled-components";
 import ClearIcon from "@mui/icons-material/Clear";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
-const AddNewElementTitle = ({ type, setOpen, projectId, listId, onAdd }) => {
+const AddNewElementTitle = ({
+  type,
+  setOpen,
+  projectId,
+  listId,
+  onAdd,
+  onAddTask,
+}) => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -33,12 +40,21 @@ const AddNewElementTitle = ({ type, setOpen, projectId, listId, onAdd }) => {
 
       if (response.ok) {
         const data = await response.json();
+        if (data) {
+          if (typeof onAddTask === "function") {
+            // Verificamos si onAddTask es una función
+            onAddTask(data); // Pasamos la tarea recién creada a onAddTask
+          }
+        } else {
+          throw new Error("Failed to add new task");
+        }
+
         setName("");
         setOpen(false);
         if (type === "list") {
           onAdd(data); // Llama a onAdd con la nueva lista creada
+          window.location.reload();
         }
-        window.location.reload();
       } else {
         throw new Error("Failed to add new element");
       }

@@ -112,6 +112,7 @@ const ContentProject = styled.section`
   grid-gap: 20px;
   grid-auto-flow: column;
   height: 100%;
+  padding-bottom: 5rem;
 `;
 
 export default BeebusyProject;

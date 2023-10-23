@@ -3,7 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import AddNewElementTitle from "./AddNewElementTitle";
 
-const AddNewElement = ({ type, projectId, listId, onAdd }) => {
+const AddNewElement = ({ type, projectId, listId, onAdd, onAddTask }) => {
   const [open, setOpen] = useState(false);
   return (
     <StyledNewElementWrapper>
@@ -14,6 +14,8 @@ const AddNewElement = ({ type, projectId, listId, onAdd }) => {
           projectId={projectId}
           listId={listId}
           onAdd={onAdd}
+          // Pasamos la función de callback
+          onAddTask={onAddTask}
         />
       </Collapse>
       <Collapse in={!open}>
